@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KASPA Successor Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body>
+    <header>
+        <div class="alert-shutdown">
+            ⚠️ Successor Dashboard: Built for Community Continuity 🛠️
+        </div>
+        <div class="header-content">
+            <div class="logo">KASPA DASHBOARD</div>
+            <nav>
+                <a href="#l2">L2 Projects</a>
+                <a href="#stats">Network Stats</a>
+                <a href="#emissions">Emission Schedule</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="dashboard-grid">
+        <section class="card market-stats-card">
+            <h2>KAS Market Stats</h2>
+            <div class="stat-group">
+                <div class="stat-item">
+                    <p class="stat-label">Price (USD)</p>
+                    <p id="kas-price" class="stat-value">--</p>
+                    <p id="price-change" class="stat-detail">--</p>
+                </div>
+                <div class="stat-item">
+                    <p class="stat-label">Volume (24h)</p>
+                    <p id="kas-volume" class="stat-value">--</p>
+                </div>
+                <div class="stat-item">
+                    <p class="stat-label">Market Cap</p>
+                    <p id="kas-mcap" class="stat-value">--</p>
+                </div>
+                <div class="stat-item">
+                    <p class="stat-label">Ranking</p>
+                    <p id="kas-rank" class="stat-value">--</p>
+                </div>
+            </div>
+            <div class="chart-container">
+                <canvas id="priceChart"></canvas>
+            </div>
+        </section>
+
+        <section class="network-metrics-grid">
+            <div class="card metric-box">
+                <p class="metric-label">DAA Score</p>
+                <p id="daa-score" class="metric-value">--</p>
+            </div>
+            <div class="card metric-box">
+                <p class="metric-label">Current Supply</p>
+                <p id="current-supply" class="metric-value">--</p>
+            </div>
+            <div class="card metric-box">
+                <p class="metric-label">Real-Time TPS</p>
+                <p id="real-time-tps" class="metric-value">--</p>
+            </div>
+            <div class="card metric-box">
+                <p class="metric-label">Real-Time BPS</p>
+                <p id="real-time-bps" class="metric-value">--</p>
+            </div>
+            
+            <div class="card metric-box large">
+                <p class="metric-label">Hashrate</p>
+                <p id="hashrate" class="metric-value">--</p>
+            </div>
+            <div class="card metric-box">
+                <p class="metric-label">Mined %</p>
+                <p id="mined-percent" class="metric-value">--</p>
+            </div>
+            <div class="card metric-box">
+                <p class="metric-label">Next Reduction</p>
+                <p id="next-reduction-days" class="metric-value">--</p>
+                <p class="stat-detail">days</p>
+            </div>
+            <div class="card metric-box">
+                <p class="metric-label">Max TPS (10s)</p>
+                <p id="max-tps-10s" class="metric-value">--</p>
+            </div>
+        </section>
+
+        <section id="l2" class="card l2-tracker-card full-width">
+            <h2>L2 Projects Tracker (Successor Index)</h2>
+            <div class="l2-summary">
+                <div class="l2-summary-item">Total Value Locked: <span id="total-tvl">--</span></div>
+                <div class="l2-summary-item">24h Volume: <span id="total-volume-24h">--</span></div>
+                <div class="l2-summary-item">Total Projects: <span id="total-projects">--</span></div>
+                <div class="l2-summary-item">Network Split: <span id="networks-split">--</span></div>
+            </div>
+            <table id="l2-projects-table">
+                <thead>
+                    <tr>
+                        <th>Project Name</th>
+                        <th>TVL</th>
+                        <th>24h Volume</th>
+                        <th>Categories</th>
+                        <th>Network</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    </tbody>
+            </table>
+        </section>
+
+    </main>
+
+    <script>
+        const formatNumber = (num, currency = true) => {
+            if (typeof num === 'string') return num; // Handle static strings like '526.09 PH/s'
+            if (num >= 1000000000) return (num / 1000000000).toFixed(2) + ' B';
+            if (num >= 1000000) return (num / 1000000).toFixed(2) + ' M';
+            if (num >= 1000) return num.toLocaleString();
+            return currency ? '$' + num.toFixed(2) : num.toFixed(2);
+        };
+
+        const loadData = async (fileName) => {
+            try {
+                // Append timestamp to ensure fresh data and bypass cache
+                const response = await fetch(`data/${fileName}?t=${new Date().getTime()}`);
+                if (!response.ok) throw new Error(`Failed to load ${fileName}`);
+                return response.json();
+            } catch (error) {
+                console.error(error);
+                return {};
+            }
+        };
+
+        const updateDashboard = async () => {
+            const marketData = await loadData('market_data.json');
+            const networkData = await loadData('network_data.json');
+            const l2Data = await loadData('l2_data.json');
+
+            // --- Market Stats ---
+            if (marketData.price_usd) {
+                document.getElementById('kas-price').textContent = `$${marketData.price_usd.toFixed(4)}`;
+                document.getElementById('kas-volume').textContent = formatNumber(marketData.volume_24h, false);
+                document.getElementById('kas-mcap').textContent = formatNumber(marketData.market_cap, false);
+                document.getElementById('kas-rank').textContent = `#${marketData.ranking}`;
+                
+                const changeElement = document.getElementById('price-change');
+                changeElement.textContent = `${marketData.price_change_24h}%`;
+                changeElement.className = marketData.price_change_24h >= 0 ? 'stat-detail up' : 'stat-detail down';
+            }
+
+            // --- Network Stats ---
+            document.getElementById('daa-score').textContent = networkData.daa_score || '--';
+            document.getElementById('current-supply').textContent = networkData.current_supply || '--';
+            document.getElementById('real-time-tps').textContent = networkData.real_time_tps || '--';
+            document.getElementById('real-time-bps').textContent = networkData.real_time_bps || '--';
+            document.getElementById('hashrate').textContent = networkData.hashrate || '--';
+            document.getElementById('mined-percent').textContent = `${networkData.mined_percent}%` || '--';
+            document.getElementById('next-reduction-days').textContent = networkData.next_reduction_days || '--';
+            document.getElementById('max-tps-10s').textContent = networkData.max_tps_10s || '--';
+            
+            // --- L2 Tracker ---
+            if (l2Data.projects) {
+                document.getElementById('total-tvl').textContent = `$${l2Data.total_tvl}`;
+                document.getElementById('total-volume-24h').textContent = `$${l2Data.total_volume_24h}`;
+                document.getElementById('total-projects').textContent = l2Data.total_projects;
+                document.getElementById('networks-split').textContent = l2Data.networks_split;
+
+                const tableBody = document.querySelector('#l2-projects-table tbody');
+                tableBody.innerHTML = ''; // Clear existing rows
+                l2Data.projects.forEach(p => {
+                    const row = tableBody.insertRow();
+                    row.insertCell().textContent = p.name;
+                    row.insertCell().textContent = `$${p.tvl}`;
+                    row.insertCell().textContent = `$${p.volume_24h}`;
+                    
+                    const categoriesCell = row.insertCell();
+                    p.category.split(',').forEach(cat => {
+                        const span = document.createElement('span');
+                        span.className = `category-tag tag-${cat.trim().toLowerCase().replace(',', '').replace(' ', '-')}`;
+                        span.textContent = cat.trim();
+                        categoriesCell.appendChild(span);
+                    });
+                    
+                    row.insertCell().textContent = p.network;
+                    const actionCell = row.insertCell();
+                    const link = document.createElement('a');
+                    link.href = p.visit;
+                    link.textContent = 'Visit';
+                    link.className = 'action-link';
+                    link.target = '_blank';
+                    actionCell.appendChild(link);
+                });
+            }
+        };
+
+        const drawChart = () => {
+            // Placeholder data for visual representation until live price history API is integrated
+            new Chart(document.getElementById('priceChart'), {
+                type: 'line',
+                data: {
+                    labels: ['4D ago', '3D ago', '2D ago', '1D ago', 'Now'],
+                    datasets: [{
+                        label: 'Price Trend',
+                        data: [0.046, 0.048, 0.047, 0.050, 0.0476], 
+                        borderColor: '#00CCCC',
+                        backgroundColor: 'rgba(0, 204, 204, 0.1)',
+                        borderWidth: 2,
+                        tension: 0.4,
+                        pointRadius: 0,
+                        fill: true,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: { display: false },
+                        y: { display: false }
+                    },
+                    plugins: { legend: { display: false }, tooltip: { enabled: false } }
+                }
+            });
+        };
+
+        window.onload = () => {
+            updateDashboard();
+            drawChart();
+            // Refresh data every 5 minutes (for better "real-time" feel between hourly GitHub commits)
+            setInterval(updateDashboard, 300000); 
+        };
+    </script>
+</body>
+</html>
