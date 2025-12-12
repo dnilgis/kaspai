@@ -145,6 +145,7 @@
 
         const loadData = async (fileName) => {
             try {
+                // Use timestamp to prevent caching old data
                 const response = await fetch(`data/${fileName}?t=${new Date().getTime()}`);
                 if (!response.ok) throw new Error(`Failed to load ${fileName}`);
                 return response.json();
@@ -155,6 +156,7 @@
         };
 
         const updateDashboard = async () => {
+            // Load all data files
             const marketData = await loadData('market_data.json');
             const networkData = await loadData('network_data.json');
             const l2Data = await loadData('l2_data.json');
@@ -222,4 +224,85 @@
                 whaleBody.innerHTML = '';
                 
                 whaleData.whales.forEach(w => {
-                    const row = whaleBody.insert
+                    const row = whaleBody.insertRow();
+                    
+                    // Rank
+                    const rankCell = row.insertCell();
+                    rankCell.textContent = `#${w.rank}`;
+                    rankCell.style.padding = '10px';
+                    
+                    // Address (Truncated for clean look)
+                    const addrCell = row.insertCell();
+                    const shortAddr = w.address.substring(0, 12) + '...' + w.address.substring(w.address.length - 6);
+                    addrCell.textContent = shortAddr;
+                    addrCell.style.padding = '10px';
+                    addrCell.style.fontFamily = 'monospace';
+                    
+                    // Known Tag
+                    const tagCell = row.insertCell();
+                    tagCell.style.padding = '10px';
+                    if (w.name !== "Unknown Whale") {
+                        const tagSpan = document.createElement('span');
+                        tagSpan.className = 'category-tag tag-meme'; // Reusing the yellow tag style for visibility
+                        tagSpan.textContent = w.name;
+                        tagCell.appendChild(tagSpan);
+                    } else {
+                        tagCell.textContent = '-';
+                    }
+                    
+                    // Balance
+                    const balCell = row.insertCell();
+                    balCell.textContent = formatNumber(w.balance, false);
+                    balCell.style.fontWeight = 'bold';
+                    balCell.style.padding = '10px';
+                    
+                    // Explorer Link
+                    const linkCell = row.insertCell();
+                    linkCell.style.padding = '10px';
+                    const link = document.createElement('a');
+                    link.href = w.link;
+                    link.target = "_blank";
+                    link.textContent = "View";
+                    link.className = "action-link";
+                    linkCell.appendChild(link);
+                });
+            }
+        };
+
+        const drawChart = () => {
+            // Placeholder chart - In the future, we can connect this to historical data
+            new Chart(document.getElementById('priceChart'), {
+                type: 'line',
+                data: {
+                    labels: ['4D ago', '3D ago', '2D ago', '1D ago', 'Now'],
+                    datasets: [{
+                        label: 'Price Trend',
+                        data: [0.046, 0.048, 0.047, 0.050, 0.0476], 
+                        borderColor: '#00CCCC',
+                        backgroundColor: 'rgba(0, 204, 204, 0.1)',
+                        borderWidth: 2,
+                        tension: 0.4,
+                        pointRadius: 0,
+                        fill: true,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: { display: false },
+                        y: { display: false }
+                    },
+                    plugins: { legend: { display: false }, tooltip: { enabled: false } }
+                }
+            });
+        };
+
+        window.onload = () => {
+            updateDashboard();
+            drawChart();
+            setInterval(updateDashboard, 300000); 
+        };
+    </script>
+</body>
+</html>
