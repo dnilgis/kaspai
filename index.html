@@ -161,12 +161,12 @@
 
         const loadData = async (fileName) => {
             try {
-                // cache-busting timestamp
+                // cache-busting timestamp to bypass GitHub Pages caching
                 const response = await fetch(`data/${fileName}?t=${new Date().getTime()}`);
                 if (!response.ok) throw new Error(`Failed to load ${fileName}`);
                 return response.json();
             } catch (error) {
-                console.warn(error); // Warn instead of Error to keep console clean
+                console.warn(error); 
                 return {};
             }
         };
@@ -201,7 +201,7 @@
             
             // 3. UPDATE KRC-20 LIST
             if (l2Data.projects) {
-                document.getElementById('total-tvl').textContent = l2Data.total_tvl; // Already formatted in Python
+                document.getElementById('total-tvl').textContent = l2Data.total_tvl; 
                 document.getElementById('total-volume-24h').textContent = l2Data.total_volume_24h;
                 document.getElementById('total-projects').textContent = l2Data.total_projects;
 
@@ -251,9 +251,10 @@
                     rankCell.textContent = `#${w.rank}`;
                     rankCell.style.fontWeight = 'bold';
                     
-                    // Address
+                    // Address (Truncated)
                     const addrCell = row.insertCell();
-                    addrCell.innerHTML = `<span class="addr-text">${w.address}</span>`;
+                    const shortAddr = w.address.substring(0, 12) + '...' + w.address.substring(w.address.length - 6);
+                    addrCell.innerHTML = `<span class="addr-text" title="${w.address}">${shortAddr}</span>`;
                     
                     // Tag
                     const tagCell = row.insertCell();
@@ -274,13 +275,13 @@
                     link.href = w.link;
                     link.textContent = " Explorer ↗";
                     link.className = "action-link";
-                    link.target = "_blank";
+                    link.target = '_blank';
                     linkCell.appendChild(link);
                 });
             }
         };
 
-        // Static Price Chart (Placeholder for visual appeal)
+        // Static Price Chart
         const drawChart = () => {
             const ctx = document.getElementById('priceChart').getContext('2d');
             
