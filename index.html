@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KASLIVE OS v2.0 // PURPLE RAIN</title>
+    <title>KASLIVE OS v2.0 // PURPLE RAIN ENHANCED</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,7 +13,7 @@
         :root {
             /* --- COLOR PALETTE --- */
             --bg-deep: #05050b;
-            --bg-panel: rgba(13, 15, 25, 0.6); /* Glass effect */
+            --bg-panel: rgba(13, 15, 25, 0.6); 
             
             --neon-cyan: #00f3ff;
             --neon-purple: #bc13fe;
@@ -25,8 +25,8 @@
             --success: #05d5aa;
 
             /* --- DIMENSIONS --- */
-            --header-height: 60px;
-            --gap: 20px;
+            --header-height: 50px;
+            --gap: 15px;
         }
 
         * {
@@ -39,7 +39,7 @@
             background-color: var(--bg-deep);
             color: var(--text-main);
             font-family: 'Space Mono', monospace;
-            height: 100vh;
+            min-height: 100vh;
             overflow-x: hidden;
             position: relative;
         }
@@ -52,7 +52,7 @@
             width: 100%;
             height: 100%;
             z-index: 0;
-            opacity: 0.3; /* Subtle rain */
+            opacity: 0.2; 
             pointer-events: none;
         }
 
@@ -83,11 +83,12 @@
             margin: 0 auto;
             padding: 20px;
             display: grid;
-            grid-template-columns: 2.5fr 1fr; /* 2/3 Left, 1/3 Right */
+            grid-template-columns: 2.2fr 1.3fr; /* Wider Left, Narrower Right */
             gap: var(--gap);
         }
 
-        .full-width { grid-column: 1 / -1; }
+        .row-span-2 { grid-row: span 2; }
+        .row-span-3 { grid-row: span 3; }
         
         /* --- HEADER --- */
         header {
@@ -97,7 +98,7 @@
             padding: 0 40px;
             height: var(--header-height);
             border-bottom: 1px solid rgba(0, 243, 255, 0.2);
-            background: rgba(5, 5, 11, 0.9);
+            background: rgba(5, 5, 11, 0.95);
             position: sticky;
             top: 0;
             z-index: 100;
@@ -105,43 +106,28 @@
         }
 
         .logo {
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             font-weight: 700;
             letter-spacing: -1px;
         }
         .logo span { color: var(--neon-cyan); }
-        .logo small { font-size: 0.8rem; color: var(--text-muted); margin-left: 10px; font-weight: 400;}
-
-        nav a {
-            color: var(--text-muted);
-            text-decoration: none;
-            margin-left: 30px;
-            text-transform: uppercase;
-            font-size: 0.9rem;
-            transition: 0.3s;
-        }
-        nav a:hover, nav a.active {
-            color: var(--neon-purple);
-            text-shadow: 0 0 10px var(--neon-purple);
-        }
 
         /* --- PANELS (GLASSMORPHISM) --- */
         .panel {
             background: var(--bg-panel);
             border: 1px solid rgba(0, 243, 255, 0.1);
             backdrop-filter: blur(8px);
-            padding: 20px;
+            padding: 15px;
             position: relative;
             overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.5);
         }
 
-        /* Corner accents for that 'tech' look */
         .panel::before {
             content: '';
             position: absolute;
             top: 0; left: 0;
-            width: 10px; height: 10px;
+            width: 8px; height: 8px;
             border-top: 2px solid var(--neon-cyan);
             border-left: 2px solid var(--neon-cyan);
         }
@@ -149,7 +135,7 @@
             content: '';
             position: absolute;
             bottom: 0; right: 0;
-            width: 10px; height: 10px;
+            width: 8px; height: 8px;
             border-bottom: 2px solid var(--neon-purple);
             border-right: 2px solid var(--neon-purple);
         }
@@ -157,9 +143,10 @@
         .panel-header {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 15px;
+            align-items: center;
+            margin-bottom: 10px;
             border-bottom: 1px solid rgba(255,255,255,0.05);
-            padding-bottom: 10px;
+            padding-bottom: 8px;
         }
         .panel-title {
             color: var(--neon-cyan);
@@ -170,69 +157,100 @@
 
         /* --- CHART SECTION --- */
         .chart-container {
-            height: 400px;
+            height: 380px;
             width: 100%;
         }
 
         /* --- METRICS GRID (Top Right) --- */
         .metrics-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: repeat(3, 1fr); /* 3 Columns for denser data */
             gap: 10px;
-            height: 100%;
+            text-align: center;
+            padding-top: 5px;
         }
         .metric-box {
             background: rgba(255,255,255,0.03);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 20px;
+            padding: 10px 5px;
             border: 1px solid rgba(255,255,255,0.05);
+            height: 100%;
         }
         .metric-label {
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             color: var(--text-muted);
-            margin-bottom: 5px;
+            margin-top: 3px;
             text-transform: uppercase;
         }
         .metric-value {
-            font-size: 1.2rem;
+            font-size: 1.0rem;
             font-weight: bold;
             color: #fff;
         }
         .metric-value.cyan { color: var(--neon-cyan); text-shadow: 0 0 10px var(--neon-cyan); }
         .metric-value.purple { color: var(--neon-purple); text-shadow: 0 0 10px var(--neon-purple); }
 
-        /* CIRCLE GAUGE (Simple CSS) */
+        /* CIRCLE GAUGE (BPS) */
         .gauge {
-            width: 80px; height: 80px;
+            width: 40px; height: 40px;
             border-radius: 50%;
             border: 2px solid rgba(255,255,255,0.1);
             border-top: 2px solid var(--neon-cyan);
-            display: flex;
+            display: inline-flex;
             align-items: center;
             justify-content: center;
             box-shadow: 0 0 15px rgba(0, 243, 255, 0.2);
+            margin-bottom: 5px;
+        }
+        .gauge-value { font-size: 0.8rem; font-weight:bold; }
+        
+        /* --- DAG INSPECTOR (NEW PANEL) --- */
+        .dag-inspector {
+            height: 300px;
+            display: flex;
+            flex-direction: column;
+        }
+        .dag-status {
+            display: flex;
+            justify-content: space-around;
+            padding-bottom: 10px;
             margin-bottom: 10px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            font-size: 0.8rem;
+        }
+        .dag-status div span:first-child { color: var(--neon-cyan); }
+        .dag-viz {
+            flex-grow: 1;
+            /* Placeholder for the complex DAG visualization */
+            background: repeating-linear-gradient(
+                45deg,
+                rgba(0, 243, 255, 0.1),
+                rgba(0, 243, 255, 0.1) 1px,
+                transparent 1px,
+                transparent 10px
+            );
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            font-size: 1.2rem;
+            border: 1px dashed rgba(255,255,255,0.1);
         }
 
         /* --- KRC TABLE --- */
         table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 0.9rem;
+            font-size: 0.8rem; /* Smaller font for more rows */
         }
         th {
             text-align: left;
             color: var(--text-muted);
             font-weight: 400;
-            padding: 10px;
+            padding: 8px; /* Less padding */
             border-bottom: 1px solid rgba(255,255,255,0.1);
         }
         td {
-            padding: 12px 10px;
+            padding: 8px; /* Less padding */
             border-bottom: 1px solid rgba(255,255,255,0.03);
         }
         tr:hover td {
@@ -255,35 +273,75 @@
             box-shadow: 0 0 15px var(--neon-cyan);
         }
 
+        /* --- WALLET API & TX WATCH (NEW PANEL) --- */
+        .wallet-panel {
+            height: 300px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .wallet-connect {
+            padding: 10px;
+            background: rgba(188, 19, 254, 0.1);
+            border: 1px solid var(--neon-purple);
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 0.8rem;
+        }
+        .wallet-connect button {
+            background: var(--neon-purple);
+            color: var(--bg-deep);
+            border: none;
+            padding: 8px 15px;
+            font-family: inherit;
+            cursor: pointer;
+            text-transform: uppercase;
+            box-shadow: 0 0 10px var(--neon-purple-glow);
+            transition: 0.2s;
+        }
+        .tx-list {
+            flex-grow: 1;
+            overflow-y: auto;
+            border: 1px solid rgba(255,255,255,0.05);
+            padding: 5px;
+        }
+        .tx-list::-webkit-scrollbar { width: 5px; }
+        .tx-list::-webkit-scrollbar-thumb { background: var(--neon-cyan); }
+        .tx-item {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.7rem;
+            padding: 4px 0;
+            border-bottom: 1px dashed rgba(255,255,255,0.05);
+        }
+        .tx-amount { color: var(--success); }
+        
         /* --- WHALE SONAR --- */
         .sonar-container {
             display: flex;
-            align-items: flex-end; /* Align bottom */
+            align-items: flex-end;
             justify-content: center;
-            height: 200px;
-            gap: 15px;
-            padding-bottom: 20px;
+            height: 120px; /* Reduced height to fit in the new layout */
+            gap: 10px;
+            padding-bottom: 10px;
         }
 
         .orb {
             border-radius: 50%;
             background: radial-gradient(circle at 30% 30%, #fff, var(--neon-cyan));
-            box-shadow: 0 0 20px var(--neon-cyan);
+            box-shadow: 0 0 15px var(--neon-cyan);
             position: relative;
             animation: float 3s ease-in-out infinite;
         }
-        
-        /* The Top Whale is Purple */
         .orb.rank-1 {
-            width: 80px; height: 80px;
+            width: 60px; height: 60px;
             background: radial-gradient(circle at 30% 30%, #f0cdff, var(--neon-purple));
-            box-shadow: 0 0 30px var(--neon-purple);
+            box-shadow: 0 0 25px var(--neon-purple);
             z-index: 2;
         }
-        .orb.rank-2 { width: 60px; height: 60px; opacity: 0.8; }
-        .orb.rank-3 { width: 50px; height: 50px; opacity: 0.6; }
-        .orb.rank-4 { width: 40px; height: 40px; opacity: 0.4; }
-        .orb.rank-5 { width: 30px; height: 30px; opacity: 0.3; }
+        .orb.rank-2 { width: 45px; height: 45px; opacity: 0.8; }
+        .orb.rank-3 { width: 35px; height: 35px; opacity: 0.6; }
+        /* Removed smaller orbs for space */
 
         .orb span {
             position: absolute;
@@ -291,33 +349,27 @@
             transform: translate(-50%, -50%);
             color: #000;
             font-weight: bold;
-            font-size: 0.8rem;
-        }
-
-        @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-            100% { transform: translateY(0px); }
+            font-size: 0.7rem;
         }
 
         .whale-list {
-            margin-top: 20px;
-            font-size: 0.8rem;
+            margin-top: 10px;
+            font-size: 0.75rem;
         }
         .whale-row {
             display: flex;
             justify-content: space-between;
-            padding: 5px 0;
-            border-bottom: 1px dashed rgba(255,255,255,0.1);
+            padding: 4px 0;
+            border-bottom: 1px dashed rgba(255,255,255,0.08);
         }
         .whale-row span:last-child { color: var(--neon-cyan); }
 
         /* --- FOOTER --- */
         .status-bar {
-            position: fixed;
+            position: sticky;
             bottom: 0;
             width: 100%;
-            background: #000;
+            background: rgba(0,0,0,0.9);
             border-top: 1px solid rgba(255,255,255,0.1);
             display: flex;
             justify-content: space-between;
@@ -327,7 +379,6 @@
             z-index: 100;
         }
         .status-online { color: var(--success); }
-
     </style>
 </head>
 <body>
@@ -337,12 +388,12 @@
     <canvas id="rain-canvas"></canvas>
 
     <header>
-        <div class="logo">KASLIVE<span>_OS</span> <small>v2.0</small></div>
+        <div class="logo">KASLIVE<span>_OS</span> v2.0</div>
         <nav>
-            <a href="#" class="active">Market</a>
+            <a href="#">MARKET</a>
             <a href="#">DAG</a>
-            <a href="#">KRC-20</a>
-            <a href="#">Sonar</a>
+            <a href="#" class="active">KRC-20</a>
+            <a href="#">SONAR</a>
         </nav>
         <div style="color: var(--neon-cyan); font-size: 0.9rem;">
             KAS: $0.0478 <span style="color: var(--danger)">-0.54%</span>
@@ -363,36 +414,24 @@
             <div class="chart-container" id="tradingview_widget"></div>
         </div>
 
-        <div class="panel">
+        <div class="panel dag-inspector">
             <div class="panel-header">
-                <span class="panel-title">Network Metrics</span>
-                <span style="font-size: 10px; color: var(--success)">● OPERATIONAL</span>
+                <span class="panel-title">DAG BLOCK INSPECTOR // $1,000,000 IDEA</span>
+                <span style="font-size: 10px; color: var(--neon-purple)">Real-Time Confirmation Flow</span>
             </div>
-            <div class="metrics-grid">
-                <div class="metric-box">
-                    <div class="gauge">
-                        <span style="font-size:0.8rem; font-weight:bold;">1.0</span>
-                    </div>
-                    <span class="metric-label">BPS</span>
-                </div>
-                <div class="metric-box">
-                    <span class="metric-value success" style="color: var(--success)">945.00</span>
-                    <span class="metric-label">Hashrate (PH/s)</span>
-                </div>
-                <div class="metric-box">
-                    <span class="metric-value">27.10 B</span>
-                    <span class="metric-label">Supply</span>
-                </div>
-                <div class="metric-box">
-                    <span class="metric-value purple">18</span>
-                    <span class="metric-label">Days to Drop</span>
-                </div>
+            <div class="dag-status">
+                <div>Tip Hash: <span>0x4f...c1d</span></div>
+                <div>Blocks/Sec: <span style="color: var(--success)">1.0 B/S</span></div>
+                <div>Avg Latency: <span>3.2 s</span></div>
+            </div>
+            <div class="dag-viz">
+                <p>Dynamic Visualization: DAG Blocks Flowing and Confirming <br>(Placeholder for D3.js or Canvas Rendering)</p>
             </div>
         </div>
 
         <div class="panel">
             <div class="panel-header">
-                <span class="panel-title">KRC-20 Terminal</span>
+                <span class="panel-title">KRC-20 Terminal // Top Assets</span>
                 <span style="font-size: 10px; color: var(--neon-purple)">Scanning...</span>
             </div>
             <table>
@@ -402,61 +441,66 @@
                         <th>TVL</th>
                         <th>Vol 24h</th>
                         <th>Chg</th>
+                        <th>LPs</th>
                         <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>NACHO</td>
-                        <td>4.46M</td>
-                        <td>115.4K</td>
-                        <td style="color: var(--danger)">-4.70%</td>
-                        <td><button class="btn-scan">SCAN</button></td>
-                    </tr>
-                    <tr>
-                        <td>KASPY</td>
-                        <td>1.07M</td>
-                        <td>25.2K</td>
-                        <td style="color: var(--success)">+2.65%</td>
-                        <td><button class="btn-scan">SCAN</button></td>
-                    </tr>
-                    <tr>
-                        <td>KANGO</td>
-                        <td>776.5K</td>
-                        <td>107.8K</td>
-                        <td style="color: var(--danger)">-2.10%</td>
-                        <td><button class="btn-scan">SCAN</button></td>
-                    </tr>
-                    <tr>
-                        <td>ZEAL</td>
-                        <td>719.6K</td>
-                        <td>55.8K</td>
-                        <td style="color: var(--danger)">-2.24%</td>
-                        <td><button class="btn-scan">SCAN</button></td>
-                    </tr>
-                    <tr>
-                        <td>KASPER</td>
-                        <td>473.3K</td>
-                        <td>51.7K</td>
-                        <td style="color: var(--danger)">-11.78%</td>
-                        <td><button class="btn-scan">SCAN</button></td>
-                    </tr>
+                    <tr><td>NACHO</td><td>4.46M</td><td>115.4K</td><td style="color: var(--danger)">-4.70%</td><td>2.1K</td><td><button class="btn-scan">SCAN</button></td></tr>
+                    <tr><td>KASPY</td><td>1.07M</td><td>25.2K</td><td style="color: var(--success)">+2.65%</td><td>1.8K</td><td><button class="btn-scan">SCAN</button></td></tr>
+                    <tr><td>KANGO</td><td>776.5K</td><td>107.8K</td><td style="color: var(--danger)">-2.10%</td><td>0.9K</td><td><button class="btn-scan">SCAN</button></td></tr>
+                    <tr><td>ZEAL</td><td>719.6K</td><td>55.8K</td><td style="color: var(--danger)">-2.24%</td><td>1.1K</td><td><button class="btn-scan">SCAN</button></td></tr>
+                    <tr><td>KASPER</td><td>473.3K</td><td>51.7K</td><td style="color: var(--danger)">-11.78%</td><td>0.5K</td><td><button class="btn-scan">SCAN</button></td></tr>
+                    <tr><td>PWWAS</td><td>363.0K</td><td>45.7K</td><td style="color: var(--success)">+0.88%</td><td>0.7K</td><td><button class="btn-scan">SCAN</button></td></tr>
+                    <tr><td>MINER</td><td>210.1K</td><td>22.1K</td><td style="color: var(--danger)">-1.55%</td><td>0.4K</td><td><button class="btn-scan">SCAN</button></td></tr>
                 </tbody>
             </table>
         </div>
 
+
         <div class="panel">
             <div class="panel-header">
-                <span class="panel-title">Whale Sonar (Top 50)</span>
+                <span class="panel-title">Network Metrics</span>
+                <span style="font-size: 10px; color: var(--success)">● OPERATIONAL</span>
+            </div>
+            <div class="metrics-grid">
+                <div class="metric-box">
+                    <div class="gauge"><span class="gauge-value">1.0</span></div>
+                    <span class="metric-label">BPS</span>
+                </div>
+                <div class="metric-box">
+                    <span class="metric-value cyan">945.00</span>
+                    <span class="metric-label">PH/s</span>
+                </div>
+                <div class="metric-box">
+                    <span class="metric-value">27.10 B</span>
+                    <span class="metric-label">Supply</span>
+                </div>
+                <div class="metric-box">
+                    <span class="metric-value purple">18</span>
+                    <span class="metric-label">Days to Drop</span>
+                </div>
+                <div class="metric-box">
+                    <span class="metric-value">4.5M</span>
+                    <span class="metric-label">Block Count</span>
+                </div>
+                <div class="metric-box">
+                    <span class="metric-value danger">0.0%</span>
+                    <span class="metric-label">Orphan Rate</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel">
+            <div class="panel-header">
+                <span class="panel-title">Whale Sonar (Top 5)</span>
             </div>
             
             <div class="sonar-container">
                 <div class="orb rank-1"><span>#1</span></div>
                 <div class="orb rank-2"><span>#2</span></div>
                 <div class="orb rank-3"><span>#3</span></div>
-                <div class="orb rank-4"></div>
-                <div class="orb rank-5"></div>
-            </div>
+                </div>
 
             <div class="whale-list">
                 <div class="whale-row">
@@ -475,6 +519,34 @@
                     <span>#4 Whale</span>
                     <span>150.00 M</span>
                 </div>
+            </div>
+        </div>
+
+        <div class="panel wallet-panel">
+            <div class="panel-header">
+                <span class="panel-title">Wallet API & TX Watch</span>
+                <span style="font-size: 10px; color: var(--neon-cyan)">Live Stream</span>
+            </div>
+            
+            <div class="wallet-connect">
+                <p>Connect your wallet to monitor balance & activity.</p>
+                <button>Connect Kaspa Wallet</button>
+            </div>
+
+            <div class="tx-list">
+                <div class="tx-item"><span>0x2a...f9c</span><span class="tx-amount">+ 1,200 KAS</span></div>
+                <div class="tx-item"><span>0x7d...a11</span><span style="color: var(--danger)">- 80 KAS</span></div>
+                <div class="tx-item"><span>0x1c...e3b</span><span class="tx-amount">+ 50,000 KAS</span></div>
+                <div class="tx-item"><span>0x8f...2g4</span><span style="color: var(--danger)">- 15,000 KAS</span></div>
+                <div class="tx-item"><span>0x2a...f9c</span><span class="tx-amount">+ 1,200 KAS</span></div>
+                <div class="tx-item"><span>0x7d...a11</span><span style="color: var(--danger)">- 80 KAS</span></div>
+                <div class="tx-item"><span>0x1c...e3b</span><span class="tx-amount">+ 50,000 KAS</span></div>
+                <div class="tx-item"><span>0x8f...2g4</span><span style="color: var(--danger)">- 15,000 KAS</span></div>
+                <div class="tx-item"><span>0x2a...f9c</span><span class="tx-amount">+ 1,200 KAS</span></div>
+                <div class="tx-item"><span>0x7d...a11</span><span style="color: var(--danger)">- 80 KAS</span></div>
+                <div class="tx-item"><span>0x1c...e3b</span><span class="tx-amount">+ 50,000 KAS</span></div>
+                <div class="tx-item"><span>0x8f...2g4</span><span style="color: var(--danger)">- 15,000 KAS</span></div>
+                <div class="tx-item"><span>0x7d...a11</span><span style="color: var(--danger)">- 80 KAS</span></div>
             </div>
         </div>
     </div>
@@ -513,10 +585,7 @@
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
 
-        const katakana = 'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッン';
-        const latin = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        const nums = '0123456789';
-        const alphabet = katakana + latin + nums;
+        const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789^$!@#%&*()-+';
 
         const fontSize = 16;
         const columns = canvas.width/fontSize;
@@ -528,19 +597,16 @@
         }
 
         const draw = () => {
-            // Dark bg with slight opacity to create trail effect
             ctx.fillStyle = 'rgba(5, 5, 11, 0.05)';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            // Set Text Color (The Purple Rain)
-            // Alternating between Purple and Cyan for tech feel
             ctx.font = fontSize + 'px monospace';
 
             for(let i = 0; i < rainDrops.length; i++)
             {
                 const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
                 
-                // Random color switch for "glitch" effect
+                // Color switch for "glitch" effect
                 if(Math.random() > 0.95) {
                     ctx.fillStyle = '#00f3ff'; // Cyan
                 } else {
