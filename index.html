@@ -3,276 +3,566 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KASLIVE | Network Command</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="icon" href="https://cryptologos.cc/logos/kaspa-kas-logo.png" type="image/png">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+    <title>KASLIVE OS v2.0 // PURPLE RAIN</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            /* --- COLOR PALETTE --- */
+            --bg-deep: #05050b;
+            --bg-panel: rgba(13, 15, 25, 0.6); /* Glass effect */
+            
+            --neon-cyan: #00f3ff;
+            --neon-purple: #bc13fe;
+            --neon-purple-glow: rgba(188, 19, 254, 0.4);
+            
+            --text-main: #e0e6ed;
+            --text-muted: #6b7d91;
+            --danger: #ff2a6d;
+            --success: #05d5aa;
+
+            /* --- DIMENSIONS --- */
+            --header-height: 60px;
+            --gap: 20px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-deep);
+            color: var(--text-main);
+            font-family: 'Space Mono', monospace;
+            height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* --- BACKGROUND EFFECTS --- */
+        #rain-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            opacity: 0.3; /* Subtle rain */
+            pointer-events: none;
+        }
+
+        .scanlines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                to bottom,
+                rgba(255,255,255,0),
+                rgba(255,255,255,0) 50%,
+                rgba(0,0,0,0.2) 50%,
+                rgba(0,0,0,0.2)
+            );
+            background-size: 100% 4px;
+            z-index: 999;
+            pointer-events: none;
+            opacity: 0.6;
+        }
+
+        /* --- LAYOUT UTILS --- */
+        .container {
+            position: relative;
+            z-index: 10;
+            max-width: 1800px;
+            margin: 0 auto;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: 2.5fr 1fr; /* 2/3 Left, 1/3 Right */
+            gap: var(--gap);
+        }
+
+        .full-width { grid-column: 1 / -1; }
+        
+        /* --- HEADER --- */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 40px;
+            height: var(--header-height);
+            border-bottom: 1px solid rgba(0, 243, 255, 0.2);
+            background: rgba(5, 5, 11, 0.9);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -1px;
+        }
+        .logo span { color: var(--neon-cyan); }
+        .logo small { font-size: 0.8rem; color: var(--text-muted); margin-left: 10px; font-weight: 400;}
+
+        nav a {
+            color: var(--text-muted);
+            text-decoration: none;
+            margin-left: 30px;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            transition: 0.3s;
+        }
+        nav a:hover, nav a.active {
+            color: var(--neon-purple);
+            text-shadow: 0 0 10px var(--neon-purple);
+        }
+
+        /* --- PANELS (GLASSMORPHISM) --- */
+        .panel {
+            background: var(--bg-panel);
+            border: 1px solid rgba(0, 243, 255, 0.1);
+            backdrop-filter: blur(8px);
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        /* Corner accents for that 'tech' look */
+        .panel::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 10px; height: 10px;
+            border-top: 2px solid var(--neon-cyan);
+            border-left: 2px solid var(--neon-cyan);
+        }
+        .panel::after {
+            content: '';
+            position: absolute;
+            bottom: 0; right: 0;
+            width: 10px; height: 10px;
+            border-bottom: 2px solid var(--neon-purple);
+            border-right: 2px solid var(--neon-purple);
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            padding-bottom: 10px;
+        }
+        .panel-title {
+            color: var(--neon-cyan);
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        /* --- CHART SECTION --- */
+        .chart-container {
+            height: 400px;
+            width: 100%;
+        }
+
+        /* --- METRICS GRID (Top Right) --- */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            height: 100%;
+        }
+        .metric-box {
+            background: rgba(255,255,255,0.03);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        .metric-label {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+        .metric-value {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #fff;
+        }
+        .metric-value.cyan { color: var(--neon-cyan); text-shadow: 0 0 10px var(--neon-cyan); }
+        .metric-value.purple { color: var(--neon-purple); text-shadow: 0 0 10px var(--neon-purple); }
+
+        /* CIRCLE GAUGE (Simple CSS) */
+        .gauge {
+            width: 80px; height: 80px;
+            border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.1);
+            border-top: 2px solid var(--neon-cyan);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.2);
+            margin-bottom: 10px;
+        }
+
+        /* --- KRC TABLE --- */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+        th {
+            text-align: left;
+            color: var(--text-muted);
+            font-weight: 400;
+            padding: 10px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        td {
+            padding: 12px 10px;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+        }
+        tr:hover td {
+            background: linear-gradient(90deg, transparent, rgba(188, 19, 254, 0.1), transparent);
+            color: #fff;
+        }
+        .btn-scan {
+            background: transparent;
+            border: 1px solid var(--neon-cyan);
+            color: var(--neon-cyan);
+            padding: 2px 8px;
+            font-size: 0.7rem;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+        }
+        .btn-scan:hover {
+            background: var(--neon-cyan);
+            color: #000;
+            box-shadow: 0 0 15px var(--neon-cyan);
+        }
+
+        /* --- WHALE SONAR --- */
+        .sonar-container {
+            display: flex;
+            align-items: flex-end; /* Align bottom */
+            justify-content: center;
+            height: 200px;
+            gap: 15px;
+            padding-bottom: 20px;
+        }
+
+        .orb {
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #fff, var(--neon-cyan));
+            box-shadow: 0 0 20px var(--neon-cyan);
+            position: relative;
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        /* The Top Whale is Purple */
+        .orb.rank-1 {
+            width: 80px; height: 80px;
+            background: radial-gradient(circle at 30% 30%, #f0cdff, var(--neon-purple));
+            box-shadow: 0 0 30px var(--neon-purple);
+            z-index: 2;
+        }
+        .orb.rank-2 { width: 60px; height: 60px; opacity: 0.8; }
+        .orb.rank-3 { width: 50px; height: 50px; opacity: 0.6; }
+        .orb.rank-4 { width: 40px; height: 40px; opacity: 0.4; }
+        .orb.rank-5 { width: 30px; height: 30px; opacity: 0.3; }
+
+        .orb span {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            color: #000;
+            font-weight: bold;
+            font-size: 0.8rem;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .whale-list {
+            margin-top: 20px;
+            font-size: 0.8rem;
+        }
+        .whale-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 0;
+            border-bottom: 1px dashed rgba(255,255,255,0.1);
+        }
+        .whale-row span:last-child { color: var(--neon-cyan); }
+
+        /* --- FOOTER --- */
+        .status-bar {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background: #000;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 20px;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            z-index: 100;
+        }
+        .status-online { color: var(--success); }
+
+    </style>
 </head>
 <body>
+
+    <div class="scanlines"></div>
     
-    <div id="canvas-container"></div>
+    <canvas id="rain-canvas"></canvas>
 
-    <div class="glass-overlay">
-        <header>
-            <div class="logo-area">
-                <div class="live-indicator">
-                    <span class="blink">●</span> LIVE
-                </div>
-                <h1>KASLIVE <span class="version">OS v2.0</span></h1>
-            </div>
-            <nav>
-                <a href="#market">MARKET</a>
-                <a href="#network">DAG</a>
-                <a href="#l2">KRC-20</a>
-                <a href="#whales">SONAR</a>
-            </nav>
-        </header>
+    <header>
+        <div class="logo">KASLIVE<span>_OS</span> <small>v2.0</small></div>
+        <nav>
+            <a href="#" class="active">Market</a>
+            <a href="#">DAG</a>
+            <a href="#">KRC-20</a>
+            <a href="#">Sonar</a>
+        </nav>
+        <div style="color: var(--neon-cyan); font-size: 0.9rem;">
+            KAS: $0.0478 <span style="color: var(--danger)">-0.54%</span>
+        </div>
+    </header>
 
-        <main class="grid-container">
-            
-            <section class="panel hero-panel" id="market">
-                <div class="panel-header">
-                    <h3>MARKET OVERVIEW</h3>
-                    <div class="price-ticker" id="kas-price">LOADING...</div>
-                </div>
-                <div id="tradingview_chart" class="tv-container"></div>
-                <div class="market-sub-stats">
-                    <div class="stat-mini">
-                        <span class="label">VOL (24H)</span>
-                        <span class="value" id="kas-volume">--</span>
-                    </div>
-                    <div class="stat-mini">
-                        <span class="label">CAP</span>
-                        <span class="value" id="kas-mcap">--</span>
-                    </div>
-                    <div class="stat-mini">
-                        <span class="label">RANK</span>
-                        <span class="value" id="kas-rank">--</span>
-                    </div>
-                </div>
-            </section>
-
-            <section class="panel hud-panel" id="network">
-                <div class="panel-header"><h3>NETWORK METRICS</h3></div>
-                <div class="hud-grid">
-                    <div class="hud-item">
-                        <div class="hud-circle" id="bps-circle">
-                            <span class="hud-val" id="real-time-bps">--</span>
-                            <span class="hud-label">BPS</span>
-                        </div>
-                    </div>
-                    <div class="hud-item">
-                        <span class="hud-label">HASHRATE</span>
-                        <span class="hud-val large" id="hashrate">--</span>
-                    </div>
-                    <div class="hud-item">
-                        <span class="hud-label">SUPPLY</span>
-                        <span class="hud-val" id="current-supply">--</span>
-                    </div>
-                    <div class="hud-item">
-                        <span class="hud-label">NEXT DROP</span>
-                        <span class="hud-val warn" id="next-reduction-days">--</span>
-                        <span class="hud-sub">DAYS</span>
-                    </div>
-                </div>
-            </section>
-
-            <section class="panel list-panel" id="l2">
-                <div class="panel-header">
-                    <h3>KRC-20 TERMINAL</h3>
-                    <span class="status-badge">ONLINE</span>
-                </div>
-                <div class="terminal-window">
-                    <table id="l2-table">
-                        <thead>
-                            <tr>
-                                <th>ASSET</th>
-                                <th>TVL</th>
-                                <th>VOL 24H</th>
-                                <th>CHG</th>
-                                <th>ACTION</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            </tbody>
-                    </table>
-                </div>
-            </section>
-
-            <section class="panel sonar-panel" id="whales">
-                <div class="panel-header"><h3>WHALE SONAR (TOP 50)</h3></div>
-                <div id="sonar-visualizer">
-                    </div>
-                <div class="whale-list-mini">
-                    <table id="whale-table">
-                        </table>
-                </div>
-            </section>
-
-        </main>
+    <div class="container">
         
-        <footer>
-            SYSTEM STATUS: OPERATIONAL • <a href="https://github.com/dnilgis/kaspai" target="_blank">SOURCE CODE</a>
-        </footer>
+        <div class="panel">
+            <div class="panel-header">
+                <span class="panel-title">Market Overview // KAS-USDT</span>
+                <div>
+                    <button class="btn-scan">1H</button>
+                    <button class="btn-scan">4H</button>
+                    <button class="btn-scan">1D</button>
+                </div>
+            </div>
+            <div class="chart-container" id="tradingview_widget"></div>
+        </div>
+
+        <div class="panel">
+            <div class="panel-header">
+                <span class="panel-title">Network Metrics</span>
+                <span style="font-size: 10px; color: var(--success)">● OPERATIONAL</span>
+            </div>
+            <div class="metrics-grid">
+                <div class="metric-box">
+                    <div class="gauge">
+                        <span style="font-size:0.8rem; font-weight:bold;">1.0</span>
+                    </div>
+                    <span class="metric-label">BPS</span>
+                </div>
+                <div class="metric-box">
+                    <span class="metric-value success" style="color: var(--success)">945.00</span>
+                    <span class="metric-label">Hashrate (PH/s)</span>
+                </div>
+                <div class="metric-box">
+                    <span class="metric-value">27.10 B</span>
+                    <span class="metric-label">Supply</span>
+                </div>
+                <div class="metric-box">
+                    <span class="metric-value purple">18</span>
+                    <span class="metric-label">Days to Drop</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel">
+            <div class="panel-header">
+                <span class="panel-title">KRC-20 Terminal</span>
+                <span style="font-size: 10px; color: var(--neon-purple)">Scanning...</span>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Asset</th>
+                        <th>TVL</th>
+                        <th>Vol 24h</th>
+                        <th>Chg</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>NACHO</td>
+                        <td>4.46M</td>
+                        <td>115.4K</td>
+                        <td style="color: var(--danger)">-4.70%</td>
+                        <td><button class="btn-scan">SCAN</button></td>
+                    </tr>
+                    <tr>
+                        <td>KASPY</td>
+                        <td>1.07M</td>
+                        <td>25.2K</td>
+                        <td style="color: var(--success)">+2.65%</td>
+                        <td><button class="btn-scan">SCAN</button></td>
+                    </tr>
+                    <tr>
+                        <td>KANGO</td>
+                        <td>776.5K</td>
+                        <td>107.8K</td>
+                        <td style="color: var(--danger)">-2.10%</td>
+                        <td><button class="btn-scan">SCAN</button></td>
+                    </tr>
+                    <tr>
+                        <td>ZEAL</td>
+                        <td>719.6K</td>
+                        <td>55.8K</td>
+                        <td style="color: var(--danger)">-2.24%</td>
+                        <td><button class="btn-scan">SCAN</button></td>
+                    </tr>
+                    <tr>
+                        <td>KASPER</td>
+                        <td>473.3K</td>
+                        <td>51.7K</td>
+                        <td style="color: var(--danger)">-11.78%</td>
+                        <td><button class="btn-scan">SCAN</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="panel">
+            <div class="panel-header">
+                <span class="panel-title">Whale Sonar (Top 50)</span>
+            </div>
+            
+            <div class="sonar-container">
+                <div class="orb rank-1"><span>#1</span></div>
+                <div class="orb rank-2"><span>#2</span></div>
+                <div class="orb rank-3"><span>#3</span></div>
+                <div class="orb rank-4"></div>
+                <div class="orb rank-5"></div>
+            </div>
+
+            <div class="whale-list">
+                <div class="whale-row">
+                    <span style="color:var(--neon-purple)">#1 Dev Fund</span>
+                    <span>1.25 B</span>
+                </div>
+                <div class="whale-row">
+                    <span style="color:var(--neon-cyan)">#2 MEXC</span>
+                    <span>350.00 M</span>
+                </div>
+                <div class="whale-row">
+                    <span>#3 Whale</span>
+                    <span>210.00 M</span>
+                </div>
+                <div class="whale-row">
+                    <span>#4 Whale</span>
+                    <span>150.00 M</span>
+                </div>
+            </div>
+        </div>
     </div>
 
+    <div class="status-bar">
+        <span>VOL (24H): 28.24M</span>
+        <span>SYSTEM: <span class="status-online">ONLINE</span></span>
+        <span>CAP: 1.28B</span>
+    </div>
+
+    <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+    <script type="text/javascript">
+    new TradingView.widget(
+    {
+        "width": "100%",
+        "height": "100%",
+        "symbol": "MEXC:KASUSDT",
+        "interval": "60",
+        "timezone": "Etc/UTC",
+        "theme": "dark",
+        "style": "1",
+        "locale": "en",
+        "toolbar_bg": "#f1f3f6",
+        "enable_publishing": false,
+        "hide_top_toolbar": false,
+        "allow_symbol_change": true,
+        "container_id": "tradingview_widget",
+        "hide_side_toolbar": false
+    });
+    </script>
+
     <script>
-        // --- 1. INITIALIZE TRADINGVIEW WIDGET ---
-        new TradingView.widget({
-            "width": "100%",
-            "height": "100%",
-            "symbol": "MEXC:KASUSDT",
-            "interval": "60",
-            "timezone": "Etc/UTC",
-            "theme": "dark",
-            "style": "1",
-            "locale": "en",
-            "toolbar_bg": "#f1f3f6",
-            "enable_publishing": false,
-            "allow_symbol_change": false,
-            "container_id": "tradingview_chart",
-            "hide_side_toolbar": true
+        const canvas = document.getElementById('rain-canvas');
+        const ctx = canvas.getContext('2d');
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const katakana = 'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッン';
+        const latin = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        const nums = '0123456789';
+        const alphabet = katakana + latin + nums;
+
+        const fontSize = 16;
+        const columns = canvas.width/fontSize;
+
+        const rainDrops = [];
+
+        for( let x = 0; x < columns; x++ ) {
+            rainDrops[x] = 1;
+        }
+
+        const draw = () => {
+            // Dark bg with slight opacity to create trail effect
+            ctx.fillStyle = 'rgba(5, 5, 11, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Set Text Color (The Purple Rain)
+            // Alternating between Purple and Cyan for tech feel
+            ctx.font = fontSize + 'px monospace';
+
+            for(let i = 0; i < rainDrops.length; i++)
+            {
+                const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
+                
+                // Random color switch for "glitch" effect
+                if(Math.random() > 0.95) {
+                    ctx.fillStyle = '#00f3ff'; // Cyan
+                } else {
+                    ctx.fillStyle = '#bc13fe'; // Purple
+                }
+
+                ctx.fillText(text, i*fontSize, rainDrops[i]*fontSize);
+
+                if(rainDrops[i]*fontSize > canvas.height && Math.random() > 0.975){
+                    rainDrops[i] = 0;
+                }
+                rainDrops[i]++;
+            }
+        };
+
+        setInterval(draw, 30);
+
+        // Resize handler
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
         });
-
-        // --- 2. THREE.JS BLOCKDAG VISUALIZER (The "Gimmick") ---
-        const init3D = () => {
-            const container = document.getElementById('canvas-container');
-            const scene = new THREE.Scene();
-            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-            const renderer = new THREE.WebGLRenderer({ alpha: true });
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            container.appendChild(renderer.domElement);
-
-            // Particles (Representing Blocks)
-            const geometry = new THREE.BufferGeometry();
-            const particlesCount = 300;
-            const posArray = new Float32Array(particlesCount * 3);
-            
-            for(let i = 0; i < particlesCount * 3; i++) {
-                posArray[i] = (Math.random() - 0.5) * 15;
-            }
-            geometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
-            const material = new THREE.PointsMaterial({
-                size: 0.05,
-                color: 0x00CCCC, // Kaspa Cyan
-                transparent: true,
-                opacity: 0.8
-            });
-            const particles = new THREE.Points(geometry, material);
-            scene.add(particles);
-
-            camera.position.z = 5;
-
-            // Animation Loop
-            const animate = () => {
-                requestAnimationFrame(animate);
-                particles.rotation.y += 0.002;
-                particles.rotation.x += 0.001;
-                renderer.render(scene, camera);
-            };
-            animate();
-
-            // Handle Resize
-            window.addEventListener('resize', () => {
-                camera.aspect = window.innerWidth / window.innerHeight;
-                camera.updateProjectionMatrix();
-                renderer.setSize(window.innerWidth, window.innerHeight);
-            });
-        };
-        init3D();
-
-        // --- 3. DATA FETCHING LOGIC (Same as before, adapted for new UI) ---
-        const formatNumber = (num, currency = true) => {
-            if (typeof num === 'string') return num; 
-            if (num >= 1000000000) return (num / 1000000000).toFixed(2) + 'B';
-            if (num >= 1000000) return (num / 1000000).toFixed(2) + 'M';
-            if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
-            return currency ? '$' + num.toFixed(2) : num.toFixed(2);
-        };
-
-        const loadData = async (fileName) => {
-            try {
-                const response = await fetch(`data/${fileName}?t=${new Date().getTime()}`);
-                return await response.json();
-            } catch (e) { return {}; }
-        };
-
-        const updateDashboard = async () => {
-            const market = await loadData('market_data.json');
-            const net = await loadData('network_data.json');
-            const l2 = await loadData('l2_data.json');
-            const whales = await loadData('whale_data.json');
-
-            // Market
-            if (market.price_usd) {
-                document.getElementById('kas-price').innerHTML = `$${market.price_usd} <span style="font-size:0.5em; color:${market.price_change_24h >= 0 ? '#0f0' : '#f00'}">${market.price_change_24h}%</span>`;
-                document.getElementById('kas-volume').textContent = formatNumber(market.volume_24h);
-                document.getElementById('kas-mcap').textContent = formatNumber(market.market_cap);
-                document.getElementById('kas-rank').textContent = `#${market.ranking}`;
-            }
-
-            // Network
-            if (net.hashrate) {
-                document.getElementById('real-time-bps').textContent = net.real_time_bps;
-                document.getElementById('hashrate').textContent = net.hashrate;
-                document.getElementById('current-supply').textContent = net.current_supply;
-                document.getElementById('next-reduction-days').textContent = net.next_reduction_days;
-            }
-
-            // KRC-20 Table
-            if (l2.projects) {
-                const tbody = document.querySelector('#l2-table tbody');
-                tbody.innerHTML = '';
-                l2.projects.forEach(p => {
-                    const row = `<tr>
-                        <td><span class="token-symbol">${p.symbol}</span></td>
-                        <td>${formatNumber(p.tvl)}</td>
-                        <td>${formatNumber(p.volume_24h)}</td>
-                        <td style="color:${p.change_24h >= 0 ? '#00ffaa' : '#ff3366'}">${p.change_24h}%</td>
-                        <td><a href="${p.visit}" target="_blank" class="btn-scan">SCAN</a></td>
-                    </tr>`;
-                    tbody.innerHTML += row;
-                });
-            }
-
-            // Whale Sonar (Bubbles)
-            if (whales.whales) {
-                const sonar = document.getElementById('sonar-visualizer');
-                sonar.innerHTML = ''; // Clear old bubbles
-                const table = document.getElementById('whale-table');
-                table.innerHTML = '';
-
-                // Take Top 8 for Bubbles (to keep it clean)
-                whales.whales.slice(0, 8).forEach((w, i) => {
-                    // Create Bubble
-                    const size = Math.max(30, Math.min(100, w.balance / 5000000)); // Scale bubble
-                    const bubble = document.createElement('div');
-                    bubble.className = 'whale-bubble';
-                    bubble.style.width = `${size}px`;
-                    bubble.style.height = `${size}px`;
-                    bubble.style.animationDelay = `${i * 0.2}s`;
-                    bubble.title = `${w.name}: ${formatNumber(w.balance, false)} KAS`;
-                    bubble.innerHTML = `<span class="bubble-rank">#${w.rank}</span>`;
-                    sonar.appendChild(bubble);
-
-                    // Add to mini list (Top 5)
-                    if (i < 5) {
-                        const row = `<tr>
-                            <td style="color:#00CCCC">#${w.rank}</td>
-                            <td>${w.name !== 'Unknown Whale' ? w.name : w.address.substring(0,8)+'...'}</td>
-                            <td style="text-align:right">${formatNumber(w.balance, false)}</td>
-                        </tr>`;
-                        table.innerHTML += row;
-                    }
-                });
-            }
-        };
-
-        window.onload = () => {
-            updateDashboard();
-            setInterval(updateDashboard, 60000); // 1 min refresh
-        };
     </script>
 </body>
 </html>
