@@ -1,0 +1,12 @@
+{
+    "top_10_total": "0",
+    "whales": [
+        {
+            "rank": 1,
+            "address": "Unknown",
+            "balance": 0.0,
+            "name": "Unknown Whale",
+            "link": "https://explorer.kaspa.org/addresses/Unknown"
+        }
+    ]
+}
