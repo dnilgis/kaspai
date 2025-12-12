@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KASLIVE OS v4.0 // COMPLETE</title>
+    <title>KASLIVE OS v7.0 // FINAL INTERACTIVE UI</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -26,7 +26,7 @@
 
             /* --- DIMENSIONS --- */
             --header-height: 50px;
-            --gap: 15px;
+            --gap: 12px;
         }
 
         * {
@@ -81,13 +81,13 @@
             z-index: 10;
             max-width: 1800px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 15px; 
             display: grid;
             grid-template-columns: 2.2fr 1.3fr; 
             gap: var(--gap);
         }
 
-        .dag-inspector, .wallet-panel {
+        .dag-inspector, .wallet-panel, .sonar-panel {
             height: 380px; 
             display: flex;
             flex-direction: column;
@@ -98,7 +98,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0 40px;
+            padding: 0 20px;
             height: var(--header-height);
             border-bottom: 1px solid rgba(0, 243, 255, 0.2);
             background: rgba(5, 5, 11, 0.95);
@@ -120,43 +120,31 @@
             background: var(--bg-panel);
             border: 1px solid rgba(0, 243, 255, 0.1);
             backdrop-filter: blur(8px);
-            padding: 15px;
+            padding: 12px; 
             position: relative;
             overflow: hidden;
             box-shadow: 0 5px 20px rgba(0,0,0,0.5);
-        }
-
-        .panel::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0;
-            width: 8px; height: 8px;
-            border-top: 2px solid var(--neon-cyan);
-            border-left: 2px solid var(--neon-cyan);
-        }
-        .panel::after {
-            content: '';
-            position: absolute;
-            bottom: 0; right: 0;
-            width: 8px; height: 8px;
-            border-bottom: 2px solid var(--neon-purple);
-            border-right: 2px solid var(--neon-purple);
         }
 
         .panel-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             border-bottom: 1px solid rgba(255,255,255,0.05);
-            padding-bottom: 8px;
+            padding-bottom: 6px;
         }
         .panel-title {
             color: var(--neon-cyan);
-            font-size: 0.9rem;
+            font-size: 0.85rem; 
             letter-spacing: 2px;
             text-transform: uppercase;
+            white-space: nowrap; 
         }
+        .panel-header span:last-child {
+            font-size: 0.65rem; 
+        }
+
 
         /* --- CHART SECTION --- */
         .chart-container {
@@ -164,90 +152,76 @@
             width: 100%;
         }
 
-        /* --- METRICS GRID (Top Right) --- */
+        /* --- METRICS GRID --- */
         .metrics-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr); 
-            gap: 10px;
+            gap: 8px; 
             text-align: center;
             padding-top: 5px;
         }
         .metric-box {
             background: rgba(255,255,255,0.03);
-            padding: 10px 5px;
+            padding: 8px 3px; 
             border: 1px solid rgba(255,255,255,0.05);
             height: 100%;
+            display: flex; 
+            flex-direction: column;
+            justify-content: center;
         }
         .metric-label {
-            font-size: 0.65rem;
+            font-size: 0.6rem; 
             color: var(--text-muted);
-            margin-top: 3px;
+            margin-top: 2px;
             text-transform: uppercase;
         }
         .metric-value {
-            font-size: 1.0rem;
+            font-size: 0.9rem; 
             font-weight: bold;
             color: #fff;
         }
-        .metric-value.cyan { color: var(--neon-cyan); text-shadow: 0 0 10px var(--neon-cyan); }
-        .metric-value.purple { color: var(--neon-purple); text-shadow: 0 0 10px var(--neon-purple); }
-
         /* CIRCLE GAUGE (BPS) */
         .gauge {
-            width: 40px; height: 40px;
+            width: 35px; height: 35px; 
             border-radius: 50%;
             border: 2px solid rgba(255,255,255,0.1);
             border-top: 2px solid var(--neon-cyan);
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 0 15px rgba(0, 243, 255, 0.2);
-            margin-bottom: 5px;
+            box-shadow: 0 0 10px rgba(0, 243, 255, 0.2);
+            margin-bottom: 3px;
         }
-        .gauge-value { font-size: 0.8rem; font-weight:bold; }
+        .gauge-value { font-size: 0.7rem; font-weight:bold; }
         
-        /* --- DAG INSPECTOR SPECIFIC STYLES --- */
+        /* --- DAG INSPECTOR --- */
         .dag-status {
             display: flex;
             justify-content: space-around;
-            padding-bottom: 10px;
-            margin-bottom: 10px;
+            padding-bottom: 8px;
+            margin-bottom: 8px;
             border-bottom: 1px solid rgba(255,255,255,0.1);
-            font-size: 0.8rem;
+            font-size: 0.75rem; 
         }
-        .dag-status div { text-align: center; }
-        .dag-status div span:first-child { color: var(--text-muted); font-size: 0.7rem; display: block; }
-        .dag-status div span:last-child { color: var(--neon-purple); font-weight: bold; }
-        .dag-status .success-value { color: var(--success); }
-        .dag-status .low-danger { color: #f0c43c; }
+        .dag-status div span:first-child { font-size: 0.65rem; }
+        .dag-status div span:last-child { font-size: 0.8rem; }
 
 
         .dag-viz-grid {
             flex-grow: 1;
             display: grid;
             grid-template-columns: 2fr 1fr; 
-            gap: 15px;
+            gap: 10px; 
         }
+        .tangle-viz h4 { font-size: 0.75rem; }
 
-        /* --- DAG TANGLE VISUALIZER --- */
-        .tangle-viz {
-            border: 1px dashed rgba(255,255,255,0.1);
-            padding: 5px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            position: relative;
-        }
-        .tangle-viz h4 { color: var(--neon-cyan); margin-bottom: 5px; font-size: 0.8rem; }
-        
         .block-stream {
-            width: 90%;
+            width: 95%;
             height: 80%;
             overflow: hidden;
             position: relative;
             border: 1px solid rgba(255,255,255,0.1);
-            margin-top: 10px;
+            margin-top: 5px;
         }
 
         .block-lane {
@@ -260,10 +234,10 @@
 
         .block-unit {
             display: inline-block;
-            width: 15px;
-            height: 15px;
+            width: 12px; 
+            height: 12px;
             border-radius: 3px;
-            margin-right: 25px;
+            margin-right: 20px; 
             transition: background-color 0.5s;
             animation: flow 4s linear infinite;
         }
@@ -275,52 +249,34 @@
             0% { transform: translateX(-100%); }
             100% { transform: translateX(100%); }
         }
-
-        /* End of flow visualization concept */
         
         .speed-analyzer {
-            border: 1px solid rgba(255,255,255,0.1);
-            padding: 10px;
-            background-color: rgba(0,0,0,0.2);
+            padding: 8px; 
         }
-        .speed-analyzer h4 { color: var(--neon-purple); margin-bottom: 10px; font-size: 0.8rem; text-transform: uppercase; }
+        .speed-analyzer h4 { font-size: 0.75rem; }
         .speed-data-point {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.75rem;
-            padding: 5px 0;
-            border-bottom: 1px dashed rgba(255,255,255,0.05);
+            font-size: 0.7rem; 
+            padding: 4px 0;
         }
-        .speed-data-point span:last-child { color: var(--neon-cyan); }
 
-
-        /* --- KRC TABLE --- */
+        /* --- KRC TABLE & TOOLTIP STYLES --- */
         table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.8rem; 
+            font-size: 0.75rem; 
         }
-        th {
-            text-align: left;
-            color: var(--text-muted);
-            font-weight: 400;
-            padding: 8px; 
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+        th, td {
+            padding: 6px; 
         }
-        td {
-            padding: 8px; 
-            border-bottom: 1px solid rgba(255,255,255,0.03);
+        
+        .scan-cell {
+            position: relative; /* REQUIRED FOR TOOLTIP POSITIONING */
         }
-        tr:hover td {
-            background: linear-gradient(90deg, transparent, rgba(188, 19, 254, 0.1), transparent);
-            color: #fff;
-        }
+
         .btn-scan {
             background: transparent;
             border: 1px solid var(--neon-cyan);
             color: var(--neon-cyan);
-            padding: 2px 8px;
-            font-size: 0.7rem;
+            padding: 2px 6px;
+            font-size: 0.65rem; 
             cursor: pointer;
             transition: 0.2s;
             font-family: inherit;
@@ -331,137 +287,88 @@
             box-shadow: 0 0 15px var(--neon-cyan);
         }
 
-        /* --- WALLET API & TX WATCH (ENHANCED) --- */
-        .wallet-panel {
-            height: 380px; 
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        .wallet-connect {
-            padding: 10px;
-            background: rgba(188, 19, 254, 0.1);
-            border: 1px solid var(--neon-purple);
-            text-align: center;
-            margin-bottom: 10px;
-            font-size: 0.8rem;
-        }
-        .wallet-connect button {
-            background: var(--neon-purple);
+        /* Tooltip Styles */
+        .tooltip {
+            visibility: hidden;
+            width: 150px;
+            background-color: var(--neon-purple);
             color: var(--bg-deep);
-            border: none;
-            padding: 8px 15px;
-            font-family: inherit;
-            cursor: pointer;
-            text-transform: uppercase;
-            box-shadow: 0 0 10px var(--neon-purple-glow);
-            transition: 0.2s;
-        }
-        .alert-box {
-            background: rgba(255, 42, 109, 0.1);
-            border: 1px solid var(--danger);
-            color: var(--danger);
-            font-size: 0.7rem;
-            padding: 5px;
             text-align: center;
-            margin-bottom: 5px;
-        }
-
-        .mining-status {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.75rem;
-            padding: 5px 0;
-            border-bottom: 1px dashed rgba(255,255,255,0.1);
-        }
-        .mining-status span:first-child { color: var(--text-muted); }
-        .mining-status span:last-child { color: var(--success); font-weight: bold; }
-
-        .tx-list {
-            flex-grow: 1;
-            overflow: hidden; /* Hide scrollbar for the continuous scroll effect */
-            border: 1px solid rgba(255,255,255,0.05);
             padding: 5px;
-            position: relative;
-        }
-        .tx-scroller {
+            border-radius: 4px;
             position: absolute;
-            width: 100%;
-            animation: scroll-tx 20s linear infinite;
-        }
-        @keyframes scroll-tx {
-            0% { transform: translateY(0%); }
-            100% { transform: translateY(-50%); } /* Scrolls twice the content height */
+            z-index: 100;
+            bottom: 100%; /* Position above the cell */
+            left: 50%;
+            margin-left: -75px; /* Center the tooltip */
+            opacity: 0;
+            transition: opacity 0.3s, visibility 0.3s;
+            font-size: 0.65rem;
+            white-space: normal;
         }
 
-        .tx-item {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.7rem;
-            padding: 4px 0;
-            border-bottom: 1px dashed rgba(255,255,255,0.05);
+        .tooltip::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: var(--neon-purple) transparent transparent transparent;
         }
-        .tx-amount { color: var(--success); }
-        
-        /* --- WHALE SONAR (Compressed for 2nd row) --- */
-        .sonar-panel {
-            height: 250px; 
-            margin-bottom: var(--gap);
+
+        /* Show the tooltip when hovering over the cell */
+        .scan-cell:hover .tooltip {
+            visibility: visible;
+            opacity: 1;
         }
+
+        /* --- WHALE SONAR --- */
         .sonar-container {
-            display: flex;
-            align-items: flex-end;
-            justify-content: center;
-            height: 80px; 
-            gap: 10px;
-            padding-bottom: 10px;
-        }
-
-        .orb {
-            border-radius: 50%;
-            background: radial-gradient(circle at 30% 30%, #fff, var(--neon-cyan));
-            box-shadow: 0 0 15px var(--neon-cyan);
-            position: relative;
-            animation: float 3s ease-in-out infinite;
+            height: 70px; 
+            padding-bottom: 5px;
         }
         .orb.rank-1 {
-            width: 50px; height: 50px; 
-            background: radial-gradient(circle at 30% 30%, #f0cdff, var(--neon-purple));
-            box-shadow: 0 0 20px var(--neon-purple);
-            z-index: 2;
+            width: 45px; height: 45px; 
         }
-        .orb.rank-2 { width: 35px; height: 35px; opacity: 0.8; }
-        .orb.rank-3 { width: 25px; height: 25px; opacity: 0.6; }
-
+        .orb.rank-2 { width: 30px; height: 30px; }
+        .orb.rank-3 { width: 20px; height: 20px; }
         .orb span { font-size: 0.6rem; }
 
         .whale-list {
-            margin-top: 10px;
-            font-size: 0.75rem;
+            margin-top: 5px;
+            font-size: 0.7rem; 
         }
         .whale-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 4px 0;
-            border-bottom: 1px dashed rgba(255,255,255,0.08);
+            padding: 3px 0;
         }
-        .whale-row span:last-child { color: var(--neon-cyan); }
 
+        /* --- WALLET API & TX WATCH --- */
+        .wallet-panel {
+            gap: 8px;
+        }
+        .alert-box {
+            font-size: 0.65rem;
+            padding: 4px;
+        }
+        .mining-status {
+            font-size: 0.7rem;
+            padding: 4px 0;
+        }
+        .tx-list {
+            position: relative;
+        }
+        .tx-item {
+            font-size: 0.65rem; 
+            padding: 3px 0;
+        }
+        
         /* --- FOOTER --- */
         .status-bar {
-            position: sticky;
-            bottom: 0;
-            width: 100%;
-            background: rgba(0,0,0,0.9);
-            border-top: 1px solid rgba(255,255,255,0.1);
-            display: flex;
-            justify-content: space-between;
-            padding: 5px 20px;
-            font-size: 0.7rem;
-            color: var(--text-muted);
-            z-index: 100;
+            padding: 4px 20px;
+            font-size: 0.65rem;
         }
-        .status-online { color: var(--success); }
     </style>
 </head>
 <body>
@@ -471,14 +378,14 @@
     <canvas id="rain-canvas"></canvas>
 
     <header>
-        <div class="logo">KASLIVE<span>_OS</span> v4.0</div>
+        <div class="logo">KASLIVE<span>_OS</span> v7.0</div>
         <nav>
             <a href="#">MARKET</a>
             <a href="#" class="active">DAG</a>
             <a href="#">KRC-20</a>
             <a href="#">SONAR</a>
         </nav>
-        <div style="color: var(--neon-cyan); font-size: 0.9rem;">
+        <div style="color: var(--neon-cyan); font-size: 0.8rem;">
             KAS: $0.0478 <span style="color: var(--danger)">-0.54%</span>
         </div>
     </header>
@@ -499,11 +406,11 @@
 
         <div class="panel dag-inspector">
             <div class="panel-header">
-                <span class="panel-title">DAG BLOCK INSPECTOR // </span>
-                <span style="font-size: 10px; color: var(--neon-purple)">Tangle Flow & Speed Analysis</span>
+                <span class="panel-title">DAG BLOCK INSPECTOR</span>
+                <span style="color: var(--neon-purple)">Tangle Flow & Speed Analysis</span>
             </div>
             <div class="dag-status">
-                <div><span>Tip Hash</span><span style="font-size: 0.9rem">0x4f...c1d</span></div>
+                <div><span>Tip Hash</span><span>0x4f...c1d</span></div>
                 <div><span>Orphan/Stale Rate</span><span class="low-danger">0.05%</span></div>
                 <div><span>In-Flight TXs</span><span class="success-value">1,452</span></div>
                 <div><span>Blocks/Sec (Target)</span><span class="success-value">1.0 B/S</span></div>
@@ -537,11 +444,11 @@
                             <span class="block-unit unconfirmed" style="animation-delay: -1.8s;"></span>
                         </div>
                     </div>
-                    <p style="font-size:0.7rem; color: var(--text-muted); margin-top: 5px;">(Green = Created / Purple = Confirmed)</p>
+                    <p style="font-size:0.65rem; color: var(--text-muted); margin-top: 5px;">(Green = Created / Purple = Confirmed)</p>
                 </div>
 
                 <div class="speed-analyzer">
-                    <h4>Speed & Latency Analyzer</h4>
+                    <h4>SPEED & LATENCY ANALYZER</h4>
                     <div class="speed-data-point"><span>Avg Block Time</span><span>980 ms</span></div>
                     <div class="speed-data-point"><span>Block Inclusion Latency</span><span>3.2 s</span></div>
                     <div class="speed-data-point"><span>Network Latency (Avg)</span><span>150 ms</span></div>
@@ -553,8 +460,8 @@
 
         <div class="panel">
             <div class="panel-header">
-                <span class="panel-title">KRC-20 Terminal // Top Assets</span>
-                <span style="font-size: 10px; color: var(--neon-purple)">Scanning...</span>
+                <span class="panel-title">KRC-20 TERMINAL // TOP ASSETS</span>
+                <span style="color: var(--neon-purple)">Scanning...</span>
             </div>
             <table>
                 <thead>
@@ -568,13 +475,34 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr><td>NACHO</td><td>4.46M</td><td>115.4K</td><td style="color: var(--danger)">-4.70%</td><td>2.1K</td><td><button class="btn-scan">SCAN</button></td></tr>
-                    <tr><td>KASPY</td><td>1.07M</td><td>25.2K</td><td style="color: var(--success)">+2.65%</td><td>1.8K</td><td><button class="btn-scan">SCAN</button></td></tr>
-                    <tr><td>KANGO</td><td>776.5K</td><td>107.8K</td><td style="color: var(--danger)">-2.10%</td><td>0.9K</td><td><button class="btn-scan">SCAN</button></td></tr>
-                    <tr><td>ZEAL</td><td>719.6K</td><td>55.8K</td><td style="color: var(--danger)">-2.24%</td><td>1.1K</td><td><button class="btn-scan">SCAN</button></td></tr>
-                    <tr><td>KASPER</td><td>473.3K</td><td>51.7K</td><td style="color: var(--danger)">-11.78%</td><td>0.5K</td><td><button class="btn-scan">SCAN</button></td></tr>
-                    <tr><td>PWWAS</td><td>363.0K</td><td>45.7K</td><td style="color: var(--success)">+0.88%</td><td>0.7K</td><td><button class="btn-scan">SCAN</button></td></tr>
-                    <tr><td>MINER</td><td>210.1K</td><td>22.1K</td><td style="color: var(--danger)">-1.55%</td><td>0.4K</td><td><button class="btn-scan">SCAN</button></td></tr>
+                    <tr><td>NACHO</td><td>4.46M</td><td>115.4K</td><td style="color: var(--danger)">-4.70%</td><td>2.1K</td><td class="scan-cell">
+                        <button class="btn-scan">SCAN</button>
+                        <span class="tooltip">Contract Address Deep Scan: View liquidity, source code, and audit status.</span>
+                    </td></tr>
+                    <tr><td>KASPY</td><td>1.07M</td><td>25.2K</td><td style="color: var(--success)">+2.65%</td><td>1.8K</td><td class="scan-cell">
+                        <button class="btn-scan">SCAN</button>
+                        <span class="tooltip">Contract Address Deep Scan: View liquidity, source code, and audit status.</span>
+                    </td></tr>
+                    <tr><td>KANGO</td><td>776.5K</td><td>107.8K</td><td style="color: var(--danger)">-2.10%</td><td>0.9K</td><td class="scan-cell">
+                        <button class="btn-scan">SCAN</button>
+                        <span class="tooltip">Contract Address Deep Scan: View liquidity, source code, and audit status.</span>
+                    </td></tr>
+                    <tr><td>ZEAL</td><td>719.6K</td><td>55.8K</td><td style="color: var(--danger)">-2.24%</td><td>1.1K</td><td class="scan-cell">
+                        <button class="btn-scan">SCAN</button>
+                        <span class="tooltip">Contract Address Deep Scan: View liquidity, source code, and audit status.</span>
+                    </td></tr>
+                    <tr><td>KASPER</td><td>473.3K</td><td>51.7K</td><td style="color: var(--danger)">-11.78%</td><td>0.5K</td><td class="scan-cell">
+                        <button class="btn-scan">SCAN</button>
+                        <span class="tooltip">Contract Address Deep Scan: View liquidity, source code, and audit status.</span>
+                    </td></tr>
+                    <tr><td>PWWAS</td><td>363.0K</td><td>45.7K</td><td style="color: var(--success)">+0.88%</td><td>0.7K</td><td class="scan-cell">
+                        <button class="btn-scan">SCAN</button>
+                        <span class="tooltip">Contract Address Deep Scan: View liquidity, source code, and audit status.</span>
+                    </td></tr>
+                    <tr><td>MINER</td><td>210.1K</td><td>22.1K</td><td style="color: var(--danger)">-1.55%</td><td>0.4K</td><td class="scan-cell">
+                        <button class="btn-scan">SCAN</button>
+                        <span class="tooltip">Contract Address Deep Scan: View liquidity, source code, and audit status.</span>
+                    </td></tr>
                 </tbody>
             </table>
         </div>
@@ -582,8 +510,8 @@
 
         <div class="panel">
             <div class="panel-header">
-                <span class="panel-title">Network Metrics</span>
-                <span style="font-size: 10px; color: var(--success)">● OPERATIONAL</span>
+                <span class="panel-title">NETWORK METRICS</span>
+                <span style="color: var(--success)">● OPERATIONAL</span>
             </div>
             <div class="metrics-grid">
                 <div class="metric-box">
@@ -610,12 +538,24 @@
                     <span class="metric-value danger">0.05%</span>
                     <span class="metric-label">Orphan Rate</span>
                 </div>
+                <div class="metric-box">
+                    <span class="metric-value success">98%</span>
+                    <span class="metric-label">Sync Status</span>
+                </div>
+                <div class="metric-box">
+                    <span class="metric-value">620</span>
+                    <span class="metric-label">Nodes Active</span>
+                </div>
+                <div class="metric-box">
+                    <span class="metric-value cyan">3.2k</span>
+                    <span class="metric-label">TXs/Min</span>
+                </div>
             </div>
         </div>
 
         <div class="panel sonar-panel">
             <div class="panel-header">
-                <span class="panel-title">Whale Sonar (Top 5)</span>
+                <span class="panel-title">WHALE SONAR (TOP 5)</span>
             </div>
             
             <div class="sonar-container">
@@ -642,8 +582,8 @@
 
         <div class="panel wallet-panel">
             <div class="panel-header">
-                <span class="panel-title">Wallet API & TX Watch</span>
-                <span style="font-size: 10px; color: var(--neon-cyan)">Live Stream</span>
+                <span class="panel-title">WALLET API & TX WATCH</span>
+                <span style="color: var(--neon-cyan)">Live Stream</span>
             </div>
             
             <div class="alert-box">
@@ -652,7 +592,7 @@
 
             <div class="mining-status">
                 <span>P.O.W. Status:</span>
-                <span>Active @ 12.5 GH/s</span>
+                <span style="color: var(--success)">Active @ 12.5 GH/s</span>
             </div>
 
             <div class="tx-list">
