@@ -3,322 +3,275 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KASLIVE | Successor Dashboard</title>
+    <title>KASLIVE | Network Command</title>
     <link rel="stylesheet" href="style.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
     <link rel="icon" href="https://cryptologos.cc/logos/kaspa-kas-logo.png" type="image/png">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
 </head>
 <body>
-    <header>
-        <div class="alert-shutdown">
-            ⚠️ Successor Dashboard: Built for Community Continuity 🛠️
-        </div>
-        <div class="header-content">
-            <div class="logo">KASLIVE <span style="font-size:0.6em; color:#666; font-weight:normal;">(Beta)</span></div>
+    
+    <div id="canvas-container"></div>
+
+    <div class="glass-overlay">
+        <header>
+            <div class="logo-area">
+                <div class="live-indicator">
+                    <span class="blink">●</span> LIVE
+                </div>
+                <h1>KASLIVE <span class="version">OS v2.0</span></h1>
+            </div>
             <nav>
-                <a href="#stats">Network</a>
-                <a href="#l2">KRC-20 Tokens</a>
-                <a href="#whales">Whale Watch</a>
-                <a href="#market">Market</a>
+                <a href="#market">MARKET</a>
+                <a href="#network">DAG</a>
+                <a href="#l2">KRC-20</a>
+                <a href="#whales">SONAR</a>
             </nav>
-        </div>
-    </header>
+        </header>
 
-    <main class="dashboard-grid">
+        <main class="grid-container">
+            
+            <section class="panel hero-panel" id="market">
+                <div class="panel-header">
+                    <h3>MARKET OVERVIEW</h3>
+                    <div class="price-ticker" id="kas-price">LOADING...</div>
+                </div>
+                <div id="tradingview_chart" class="tv-container"></div>
+                <div class="market-sub-stats">
+                    <div class="stat-mini">
+                        <span class="label">VOL (24H)</span>
+                        <span class="value" id="kas-volume">--</span>
+                    </div>
+                    <div class="stat-mini">
+                        <span class="label">CAP</span>
+                        <span class="value" id="kas-mcap">--</span>
+                    </div>
+                    <div class="stat-mini">
+                        <span class="label">RANK</span>
+                        <span class="value" id="kas-rank">--</span>
+                    </div>
+                </div>
+            </section>
+
+            <section class="panel hud-panel" id="network">
+                <div class="panel-header"><h3>NETWORK METRICS</h3></div>
+                <div class="hud-grid">
+                    <div class="hud-item">
+                        <div class="hud-circle" id="bps-circle">
+                            <span class="hud-val" id="real-time-bps">--</span>
+                            <span class="hud-label">BPS</span>
+                        </div>
+                    </div>
+                    <div class="hud-item">
+                        <span class="hud-label">HASHRATE</span>
+                        <span class="hud-val large" id="hashrate">--</span>
+                    </div>
+                    <div class="hud-item">
+                        <span class="hud-label">SUPPLY</span>
+                        <span class="hud-val" id="current-supply">--</span>
+                    </div>
+                    <div class="hud-item">
+                        <span class="hud-label">NEXT DROP</span>
+                        <span class="hud-val warn" id="next-reduction-days">--</span>
+                        <span class="hud-sub">DAYS</span>
+                    </div>
+                </div>
+            </section>
+
+            <section class="panel list-panel" id="l2">
+                <div class="panel-header">
+                    <h3>KRC-20 TERMINAL</h3>
+                    <span class="status-badge">ONLINE</span>
+                </div>
+                <div class="terminal-window">
+                    <table id="l2-table">
+                        <thead>
+                            <tr>
+                                <th>ASSET</th>
+                                <th>TVL</th>
+                                <th>VOL 24H</th>
+                                <th>CHG</th>
+                                <th>ACTION</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="panel sonar-panel" id="whales">
+                <div class="panel-header"><h3>WHALE SONAR (TOP 50)</h3></div>
+                <div id="sonar-visualizer">
+                    </div>
+                <div class="whale-list-mini">
+                    <table id="whale-table">
+                        </table>
+                </div>
+            </section>
+
+        </main>
         
-        <section id="market" class="card market-stats-card">
-            <h2>KAS Market Stats</h2>
-            <div class="stat-group">
-                <div class="stat-item">
-                    <p class="stat-label">Price (USD)</p>
-                    <p id="kas-price" class="stat-value">--</p>
-                    <p id="price-change" class="stat-detail">--</p>
-                </div>
-                <div class="stat-item">
-                    <p class="stat-label">Volume (24h)</p>
-                    <p id="kas-volume" class="stat-value">--</p>
-                </div>
-                <div class="stat-item">
-                    <p class="stat-label">Market Cap</p>
-                    <p id="kas-mcap" class="stat-value">--</p>
-                </div>
-                <div class="stat-item">
-                    <p class="stat-label">Ranking</p>
-                    <p id="kas-rank" class="stat-value">--</p>
-                </div>
-            </div>
-            <div class="chart-container">
-                <canvas id="priceChart"></canvas>
-            </div>
-        </section>
-
-        <section id="stats" class="network-metrics-grid">
-            <div class="card metric-box">
-                <p class="metric-label">DAA Score</p>
-                <p id="daa-score" class="metric-value">--</p>
-            </div>
-            <div class="card metric-box">
-                <p class="metric-label">Current Supply</p>
-                <p id="current-supply" class="metric-value">--</p>
-            </div>
-            <div class="card metric-box">
-                <p class="metric-label">Real-Time TPS</p>
-                <p id="real-time-tps" class="metric-value">--</p>
-            </div>
-            <div class="card metric-box">
-                <p class="metric-label">Real-Time BPS</p>
-                <p id="real-time-bps" class="metric-value">--</p>
-            </div>
-            
-            <div class="card metric-box large">
-                <p class="metric-label">Hashrate</p>
-                <p id="hashrate" class="metric-value">--</p>
-                <p class="stat-detail">Network Security</p>
-            </div>
-            <div class="card metric-box">
-                <p class="metric-label">Mined %</p>
-                <p id="mined-percent" class="metric-value">--</p>
-            </div>
-            <div class="card metric-box" id="emissions">
-                <p class="metric-label">Next Reduction</p>
-                <p id="next-reduction-days" class="metric-value">--</p>
-                <p class="stat-detail">days</p>
-            </div>
-            <div class="card metric-box">
-                <p class="metric-label">Max TPS (10s)</p>
-                <p id="max-tps-10s" class="metric-value">--</p>
-            </div>
-        </section>
-
-        <section id="l2" class="card full-width">
-            <div class="section-header">
-                <h2>💎 KRC-20 Ecosystem Tracker</h2>
-                <span class="live-badge">● Live Data</span>
-            </div>
-            
-            <div class="l2-summary">
-                <div class="l2-summary-item">Total Cap: <span id="total-tvl">--</span></div>
-                <div class="l2-summary-item">24h Vol: <span id="total-volume-24h">--</span></div>
-                <div class="l2-summary-item">Tokens Tracked: <span id="total-projects">--</span></div>
-            </div>
-            
-            <div class="table-container">
-                <table id="l2-projects-table">
-                    <thead>
-                        <tr>
-                            <th>Token</th>
-                            <th>Market Cap (TVL)</th>
-                            <th>Volume (24h)</th>
-                            <th>24h Change</th>
-                            <th>Network</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        </tbody>
-                </table>
-            </div>
-        </section>
-
-        <section id="whales" class="card full-width">
-            <div class="section-header">
-                <h2>🐳 Whale Watch (Top 50)</h2>
-                <p class="section-subtitle">Tracking the largest wallets on the Kaspa network.</p>
-            </div>
-            
-            <div class="table-container">
-                <table id="whale-table">
-                    <thead>
-                        <tr>
-                            <th>Rank</th>
-                            <th>Address</th>
-                            <th>Known Tag</th>
-                            <th>Balance (KAS)</th>
-                            <th>Explorer</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        </tbody>
-                </table>
-            </div>
-        </section>
-
-    </main>
-
-    <footer>
-        <p>Built for the Community • Powered by Open Source • <a href="https://github.com/dnilgis/kaspai" target="_blank">View on GitHub</a></p>
-    </footer>
+        <footer>
+            SYSTEM STATUS: OPERATIONAL • <a href="https://github.com/dnilgis/kaspai" target="_blank">SOURCE CODE</a>
+        </footer>
+    </div>
 
     <script>
-        // formatting helper
+        // --- 1. INITIALIZE TRADINGVIEW WIDGET ---
+        new TradingView.widget({
+            "width": "100%",
+            "height": "100%",
+            "symbol": "MEXC:KASUSDT",
+            "interval": "60",
+            "timezone": "Etc/UTC",
+            "theme": "dark",
+            "style": "1",
+            "locale": "en",
+            "toolbar_bg": "#f1f3f6",
+            "enable_publishing": false,
+            "allow_symbol_change": false,
+            "container_id": "tradingview_chart",
+            "hide_side_toolbar": true
+        });
+
+        // --- 2. THREE.JS BLOCKDAG VISUALIZER (The "Gimmick") ---
+        const init3D = () => {
+            const container = document.getElementById('canvas-container');
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({ alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            container.appendChild(renderer.domElement);
+
+            // Particles (Representing Blocks)
+            const geometry = new THREE.BufferGeometry();
+            const particlesCount = 300;
+            const posArray = new Float32Array(particlesCount * 3);
+            
+            for(let i = 0; i < particlesCount * 3; i++) {
+                posArray[i] = (Math.random() - 0.5) * 15;
+            }
+            geometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+            const material = new THREE.PointsMaterial({
+                size: 0.05,
+                color: 0x00CCCC, // Kaspa Cyan
+                transparent: true,
+                opacity: 0.8
+            });
+            const particles = new THREE.Points(geometry, material);
+            scene.add(particles);
+
+            camera.position.z = 5;
+
+            // Animation Loop
+            const animate = () => {
+                requestAnimationFrame(animate);
+                particles.rotation.y += 0.002;
+                particles.rotation.x += 0.001;
+                renderer.render(scene, camera);
+            };
+            animate();
+
+            // Handle Resize
+            window.addEventListener('resize', () => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            });
+        };
+        init3D();
+
+        // --- 3. DATA FETCHING LOGIC (Same as before, adapted for new UI) ---
         const formatNumber = (num, currency = true) => {
             if (typeof num === 'string') return num; 
-            if (num >= 1000000000) return (num / 1000000000).toFixed(2) + ' B';
-            if (num >= 1000000) return (num / 1000000).toFixed(2) + ' M';
-            if (num >= 1000) return num.toLocaleString();
+            if (num >= 1000000000) return (num / 1000000000).toFixed(2) + 'B';
+            if (num >= 1000000) return (num / 1000000).toFixed(2) + 'M';
+            if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
             return currency ? '$' + num.toFixed(2) : num.toFixed(2);
         };
 
         const loadData = async (fileName) => {
             try {
-                // cache-busting timestamp to bypass GitHub Pages caching
                 const response = await fetch(`data/${fileName}?t=${new Date().getTime()}`);
-                if (!response.ok) throw new Error(`Failed to load ${fileName}`);
-                return response.json();
-            } catch (error) {
-                console.warn(error); 
-                return {};
-            }
+                return await response.json();
+            } catch (e) { return {}; }
         };
 
         const updateDashboard = async () => {
-            const marketData = await loadData('market_data.json');
-            const networkData = await loadData('network_data.json');
-            const l2Data = await loadData('l2_data.json');
-            const whaleData = await loadData('whale_data.json');
+            const market = await loadData('market_data.json');
+            const net = await loadData('network_data.json');
+            const l2 = await loadData('l2_data.json');
+            const whales = await loadData('whale_data.json');
 
-            // 1. UPDATE MARKET
-            if (marketData.price_usd) {
-                document.getElementById('kas-price').textContent = `$${marketData.price_usd.toFixed(4)}`;
-                document.getElementById('kas-volume').textContent = formatNumber(marketData.volume_24h, false);
-                document.getElementById('kas-mcap').textContent = formatNumber(marketData.market_cap, false);
-                document.getElementById('kas-rank').textContent = `#${marketData.ranking}`;
-                
-                const changeElement = document.getElementById('price-change');
-                changeElement.textContent = `${marketData.price_change_24h}%`;
-                changeElement.className = marketData.price_change_24h >= 0 ? 'stat-detail up' : 'stat-detail down';
+            // Market
+            if (market.price_usd) {
+                document.getElementById('kas-price').innerHTML = `$${market.price_usd} <span style="font-size:0.5em; color:${market.price_change_24h >= 0 ? '#0f0' : '#f00'}">${market.price_change_24h}%</span>`;
+                document.getElementById('kas-volume').textContent = formatNumber(market.volume_24h);
+                document.getElementById('kas-mcap').textContent = formatNumber(market.market_cap);
+                document.getElementById('kas-rank').textContent = `#${market.ranking}`;
             }
 
-            // 2. UPDATE NETWORK
-            document.getElementById('daa-score').textContent = networkData.daa_score || '--';
-            document.getElementById('current-supply').textContent = networkData.current_supply || '--';
-            document.getElementById('real-time-tps').textContent = networkData.real_time_tps || '--';
-            document.getElementById('real-time-bps').textContent = networkData.real_time_bps || '--';
-            document.getElementById('hashrate').textContent = networkData.hashrate || '--';
-            document.getElementById('mined-percent').textContent = `${networkData.mined_percent}%` || '--';
-            document.getElementById('next-reduction-days').textContent = networkData.next_reduction_days || '--';
-            document.getElementById('max-tps-10s').textContent = networkData.max_tps_10s || '--';
-            
-            // 3. UPDATE KRC-20 LIST
-            if (l2Data.projects) {
-                document.getElementById('total-tvl').textContent = l2Data.total_tvl; 
-                document.getElementById('total-volume-24h').textContent = l2Data.total_volume_24h;
-                document.getElementById('total-projects').textContent = l2Data.total_projects;
+            // Network
+            if (net.hashrate) {
+                document.getElementById('real-time-bps').textContent = net.real_time_bps;
+                document.getElementById('hashrate').textContent = net.hashrate;
+                document.getElementById('current-supply').textContent = net.current_supply;
+                document.getElementById('next-reduction-days').textContent = net.next_reduction_days;
+            }
 
-                const tableBody = document.querySelector('#l2-projects-table tbody');
-                tableBody.innerHTML = ''; 
-                l2Data.projects.forEach(p => {
-                    const row = tableBody.insertRow();
-                    
-                    // Token Name & Symbol
-                    row.insertCell().innerHTML = `<strong>${p.name}</strong> <span style="font-size:0.8em; color:#666;">(${p.symbol || ''})</span>`;
-                    
-                    row.insertCell().textContent = formatNumber(p.tvl);
-                    row.insertCell().textContent = formatNumber(p.volume_24h);
-                    
-                    // Change
-                    const changeCell = row.insertCell();
-                    if (p.change_24h !== undefined) {
-                        changeCell.textContent = `${p.change_24h.toFixed(2)}%`;
-                        changeCell.className = p.change_24h >= 0 ? 'stat-detail up' : 'stat-detail down';
-                    } else {
-                        changeCell.textContent = '--';
-                    }
-                    
-                    row.insertCell().textContent = p.network;
-                    
-                    // Action Button
-                    const actionCell = row.insertCell();
-                    const link = document.createElement('a');
-                    link.href = p.visit;
-                    link.innerHTML = 'View';
-                    link.className = 'btn-small';
-                    link.target = '_blank';
-                    actionCell.appendChild(link);
+            // KRC-20 Table
+            if (l2.projects) {
+                const tbody = document.querySelector('#l2-table tbody');
+                tbody.innerHTML = '';
+                l2.projects.forEach(p => {
+                    const row = `<tr>
+                        <td><span class="token-symbol">${p.symbol}</span></td>
+                        <td>${formatNumber(p.tvl)}</td>
+                        <td>${formatNumber(p.volume_24h)}</td>
+                        <td style="color:${p.change_24h >= 0 ? '#00ffaa' : '#ff3366'}">${p.change_24h}%</td>
+                        <td><a href="${p.visit}" target="_blank" class="btn-scan">SCAN</a></td>
+                    </tr>`;
+                    tbody.innerHTML += row;
                 });
             }
 
-            // 4. UPDATE WHALE LIST
-            if (whaleData.whales) {
-                const whaleBody = document.querySelector('#whale-table tbody');
-                whaleBody.innerHTML = '';
-                
-                whaleData.whales.forEach(w => {
-                    const row = whaleBody.insertRow();
-                    
-                    // Rank
-                    const rankCell = row.insertCell();
-                    rankCell.textContent = `#${w.rank}`;
-                    rankCell.style.fontWeight = 'bold';
-                    
-                    // Address (Truncated)
-                    const addrCell = row.insertCell();
-                    const shortAddr = w.address.substring(0, 12) + '...' + w.address.substring(w.address.length - 6);
-                    addrCell.innerHTML = `<span class="addr-text" title="${w.address}">${shortAddr}</span>`;
-                    
-                    // Tag
-                    const tagCell = row.insertCell();
-                    if (w.name !== "Unknown Whale") {
-                        tagCell.innerHTML = `<span class="tag-whale">${w.name}</span>`;
-                    } else {
-                        tagCell.innerHTML = `<span style="color:#ccc;">-</span>`;
+            // Whale Sonar (Bubbles)
+            if (whales.whales) {
+                const sonar = document.getElementById('sonar-visualizer');
+                sonar.innerHTML = ''; // Clear old bubbles
+                const table = document.getElementById('whale-table');
+                table.innerHTML = '';
+
+                // Take Top 8 for Bubbles (to keep it clean)
+                whales.whales.slice(0, 8).forEach((w, i) => {
+                    // Create Bubble
+                    const size = Math.max(30, Math.min(100, w.balance / 5000000)); // Scale bubble
+                    const bubble = document.createElement('div');
+                    bubble.className = 'whale-bubble';
+                    bubble.style.width = `${size}px`;
+                    bubble.style.height = `${size}px`;
+                    bubble.style.animationDelay = `${i * 0.2}s`;
+                    bubble.title = `${w.name}: ${formatNumber(w.balance, false)} KAS`;
+                    bubble.innerHTML = `<span class="bubble-rank">#${w.rank}</span>`;
+                    sonar.appendChild(bubble);
+
+                    // Add to mini list (Top 5)
+                    if (i < 5) {
+                        const row = `<tr>
+                            <td style="color:#00CCCC">#${w.rank}</td>
+                            <td>${w.name !== 'Unknown Whale' ? w.name : w.address.substring(0,8)+'...'}</td>
+                            <td style="text-align:right">${formatNumber(w.balance, false)}</td>
+                        </tr>`;
+                        table.innerHTML += row;
                     }
-                    
-                    // Balance
-                    const balCell = row.insertCell();
-                    balCell.textContent = formatNumber(w.balance, false);
-                    balCell.style.fontWeight = 'bold';
-                    
-                    // Link
-                    const linkCell = row.insertCell();
-                    const link = document.createElement('a');
-                    link.href = w.link;
-                    link.textContent = " Explorer ↗";
-                    link.className = "action-link";
-                    link.target = '_blank';
-                    linkCell.appendChild(link);
                 });
             }
-        };
-
-        // Static Price Chart
-        const drawChart = () => {
-            const ctx = document.getElementById('priceChart').getContext('2d');
-            
-            // Create Gradient
-            let gradient = ctx.createLinearGradient(0, 0, 0, 400);
-            gradient.addColorStop(0, 'rgba(0, 204, 204, 0.2)');
-            gradient.addColorStop(1, 'rgba(0, 204, 204, 0.0)');
-
-            new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: ['4D', '3D', '2D', '1D', 'Now'],
-                    datasets: [{
-                        label: 'Price',
-                        data: [0.046, 0.048, 0.047, 0.050, 0.0476], 
-                        borderColor: '#00CCCC',
-                        backgroundColor: gradient,
-                        borderWidth: 2,
-                        tension: 0.4,
-                        pointRadius: 0,
-                        fill: true,
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
-                    scales: { x: { display: false }, y: { display: false } }
-                }
-            });
         };
 
         window.onload = () => {
             updateDashboard();
-            drawChart();
-            // Auto-refresh data every 5 minutes
-            setInterval(updateDashboard, 300000); 
+            setInterval(updateDashboard, 60000); // 1 min refresh
         };
     </script>
 </body>
