@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KASLIVE v11.0 // A dnilgis Project</title>
+    <title>KASLIVE v12.0 // A dnilgis Project</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -143,12 +143,6 @@
             grid-template-columns: 2.5fr 1fr;
             gap: var(--gap-main);
             margin-bottom: 3rem;
-            animation: fadeIn 0.8s ease 0.2s backwards;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
         }
 
         /* Card Styles */
@@ -189,11 +183,6 @@
             background: var(--accent-green);
             box-shadow: 0 0 10px var(--accent-green);
             animation: pulse 2s ease infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
         }
 
         /* Metric Grid */
@@ -283,7 +272,6 @@
         /* Whale Watch Section */
         .whale-section {
             margin-bottom: 3rem;
-            animation: fadeIn 0.8s ease 0.4s backwards;
         }
 
         .section-header {
@@ -412,7 +400,6 @@
         /* KRC-20 Terminal */
         .krc20-section {
             margin-bottom: 3rem;
-            animation: fadeIn 0.8s ease 0.6s backwards;
         }
 
         .terminal-container {
@@ -532,7 +519,7 @@
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
             font-family: 'JetBrains Mono', monospace;
         }
-        
+
         /* Mining Calculator specific styles */
         .mining-calc input {
             width: 100%;
@@ -625,7 +612,7 @@
 <body>
     <header>
         <div class="header-content">
-            <div class="logo">KAS<span style="color: var(--accent-green);">LIVE</span> v11.0</div>
+            <div class="logo">KAS<span style="color: var(--accent-green);">LIVE</span> v12.0</div>
             <nav class="nav">
                 <a href="#whale" class="nav-link">WHALE_WATCH</a>
                 <a href="#krc20" class="nav-link">KRC-20</a>
@@ -642,14 +629,17 @@
     <div class="container">
         <section class="hero">
             <div class="card chart-section">
-                <div class="panel-header">
-                    <span class="panel-title">KAS PRICE CHART & MOMENTUM</span>
+                <div class="card-title" style="margin-bottom: 0.5rem;">
+                    <span style="color: var(--accent-cyan);">📈</span>
+                    KAS PRICE CHART & MOMENTUM
+                </div>
+                <div class="panel-header" style="border-bottom: none; margin-bottom: 0.5rem; justify-content: flex-start; gap: 1rem; padding: 0;">
                     <div class="chart-timeframe">
-                        <button style="font-family: 'JetBrains Mono', monospace;">1H</button>
-                        <button style="font-family: 'JetBrains Mono', monospace;">4H</button>
-                        <button style="font-family: 'JetBrains Mono', monospace;">1D</button>
-                        <button style="font-family: 'JetBrains Mono', monospace;">1W</button>
-                        <button style="font-family: 'JetBrains Mono', monospace;">ALL</button>
+                        <button style="font-family: 'JetBrains Mono', monospace; background: var(--bg-tertiary); border: 1px solid var(--accent-cyan); padding: 5px 10px; color: var(--accent-cyan); cursor: pointer;">1H</button>
+                        <button style="font-family: 'JetBrains Mono', monospace; background: var(--bg-tertiary); border: 1px solid var(--border); padding: 5px 10px; color: var(--text-muted); cursor: pointer;">4H</button>
+                        <button style="font-family: 'JetBrains Mono', monospace; background: var(--bg-tertiary); border: 1px solid var(--border); padding: 5px 10px; color: var(--text-muted); cursor: pointer;">1D</button>
+                        <button style="font-family: 'JetBrains Mono', monospace; background: var(--bg-tertiary); border: 1px solid var(--border); padding: 5px 10px; color: var(--text-muted); cursor: pointer;">1W</button>
+                        <button style="font-family: 'JetBrains Mono', monospace; background: var(--bg-tertiary); border: 1px solid var(--border); padding: 5px 10px; color: var(--text-muted); cursor: pointer;">ALL</button>
                     </div>
                 </div>
                 <div class="chart-container">
@@ -829,7 +819,7 @@
                 <a href="#" class="footer-link">GITHUB</a>
             </div>
             <div class="footer-credit">
-                KASLIVE v11.0 // A <a href="mailto:dnilgis@gmail.com" style="color: var(--accent-cyan); text-decoration: none;">dnilgis Project</a>
+                KASLIVE v12.0 // A <a href="mailto:dnilgis@gmail.com" style="color: var(--accent-cyan); text-decoration: none;">dnilgis Project</a>
             </div>
             <div style="margin-top: 0.5rem; font-size: 0.75rem;">Built for Kaspa Believers</div>
         </div>
