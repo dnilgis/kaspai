@@ -3,742 +3,892 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KASLIVE OS v9.1 // FINAL FOOTER FIX</title>
+    <title>KASLIVE v10.0 // A dnilgis Project</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Syne:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 
     <style>
         :root {
-            /* --- COLOR PALETTE --- */
-            --bg-deep: #05050b;
-            --bg-panel: rgba(13, 15, 25, 0.6); 
-            
-            --neon-cyan: #00f3ff;
-            --neon-purple: #bc13fe;
-            --neon-purple-glow: rgba(188, 19, 254, 0.4);
-            
-            --text-main: #e0e6ed;
-            --text-muted: #6b7d91;
-            --danger: #ff2a6d;
-            --success: #05d5aa;
-
-            /* --- DIMENSIONS --- */
-            --header-height: 50px;
-            --footer-height: 30px; /* New fixed footer height */
-            --gap: 12px;
-            --chart-height: 380px; 
+            /* Your Preferred Color Palette */
+            --bg-primary: #0a0e1a;
+            --bg-secondary: #111827;
+            --bg-tertiary: #1a2332;
+            --accent-cyan: #00f0ff;
+            --accent-green: #00ff88;
+            --accent-red: #ff3366;
+            --accent-premium: gold; /* New Premium Accent */
+            --text-primary: #e5e7eb;
+            --text-secondary: #9ca3af;
+            --text-muted: #6b7280;
+            --border: rgba(0, 240, 255, 0.15);
+            --glow: rgba(0, 240, 255, 0.3);
+            --gap-main: 2rem;
         }
 
         * {
-            box-sizing: border-box;
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
+            /* Scrollbar for subtle terminal look */
+            scrollbar-color: var(--accent-cyan) var(--bg-secondary);
+            scrollbar-width: thin;
         }
 
         body {
-            background-color: var(--bg-deep);
-            color: var(--text-main);
-            font-family: 'Space Mono', monospace;
-            min-height: 100vh;
+            font-family: 'Syne', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
             overflow-x: hidden;
-            position: relative;
-            padding-bottom: var(--footer-height); /* Space for the fixed footer */
+            line-height: 1.6;
         }
 
-        /* --- BACKGROUND EFFECTS --- */
-        #rain-canvas {
+        /* Background Grid Effect */
+        body::before {
+            content: '';
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: 0;
-            opacity: 0.2; 
+            background-image: linear-gradient(rgba(0, 240, 255, 0.03) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(0, 240, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
             pointer-events: none;
+            z-index: -1;
         }
 
-        .scanlines {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(
-                to bottom,
-                rgba(255,255,255,0),
-                rgba(255,255,255,0) 50%,
-                rgba(0,0,0,0.2) 50%,
-                rgba(0,0,0,0.2)
-            );
-            background-size: 100% 4px;
-            z-index: 999;
-            pointer-events: none;
-            opacity: 0.6;
-        }
-
-        /* --- LAYOUT UTILS (STRICT 2-ROW GRID) --- */
-        .container {
-            position: relative;
-            z-index: 10;
-            max-width: 1800px;
-            margin: 0 auto;
-            padding: 15px; 
-            display: grid;
-            grid-template-columns: 2.2fr 1.3fr; 
-            grid-template-rows: var(--chart-height) 1fr; 
-            gap: var(--gap);
-        }
-
-        /* STACKED PANEL CONTAINERS (Used for Row 2 only) */
-        .left-stack {
-            display: flex;
-            flex-direction: column;
-            gap: var(--gap);
-            height: 100%;
-        }
-        .right-stack {
-            display: flex;
-            flex-direction: column;
-            gap: var(--gap);
-            height: 100%;
-        }
-
-        /* Panel heights for Row 1 */
-        .chart-panel, .network-panel { height: var(--chart-height); }
-        
-        /* Panel heights for Row 2 (flex-grow fills container height) */
-        .krc-terminal-panel { flex-grow: 1; display: flex; flex-direction: column; height: 50%; }
-        .dag-inspector-panel { flex-grow: 1; display: flex; flex-direction: column; height: 50%; }
-        .whale-sonar-panel { flex-grow: 1; display: flex; flex-direction: column; height: 40%; }
-        .wallet-panel { flex-grow: 1; display: flex; flex-direction: column; height: 60%; }
-        
-        /* --- HEADER --- */
+        /* Header */
         header {
+            position: sticky;
+            top: 0;
+            background: rgba(10, 14, 26, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 2rem;
+            z-index: 100;
+            animation: slideDown 0.6s ease;
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .header-content {
+            max-width: 1600px;
+            margin: 0 auto;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0 20px;
-            height: var(--header-height);
-            border-bottom: 1px solid rgba(0, 243, 255, 0.2);
-            background: rgba(5, 5, 11, 0.95);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            backdrop-filter: blur(10px);
         }
 
         .logo {
-            font-size: 1.3rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.5rem;
             font-weight: 700;
-            letter-spacing: -1px;
+            color: var(--accent-cyan);
+            text-shadow: 0 0 20px var(--glow);
+            letter-spacing: 0.1em;
         }
-        .logo span { color: var(--neon-cyan); }
 
-        /* --- PANELS (GLASSMORPHISM) --- */
-        .panel {
-            background: var(--bg-panel);
-            border: 1px solid rgba(0, 243, 255, 0.1);
-            backdrop-filter: blur(8px);
-            padding: 12px; 
+        .logo span {
+            color: var(--text-primary);
+            font-weight: 400;
+        }
+
+        .nav {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-link {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all 0.3s ease;
             position: relative;
-            overflow: hidden;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+            letter-spacing: 0.05em;
         }
 
-        .panel-header {
+        .nav-link:hover {
+            color: var(--accent-cyan);
+        }
+
+        .price-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+        }
+
+        .price-change.positive { color: var(--accent-green); }
+        .price-change.negative { color: var(--accent-red); }
+
+        /* Container */
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Layout Grid for Hero/Chart Section */
+        .hero {
+            display: grid;
+            grid-template-columns: 2.5fr 1fr; /* Chart is wide */
+            gap: var(--gap-main);
+            margin-bottom: 3rem;
+        }
+
+        /* Card Styles */
+        .card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .card-title {
+            font-size: 0.85rem;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent-green);
+            box-shadow: 0 0 10px var(--accent-green);
+            animation: pulse 2s ease infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Metric Grid */
+        .network-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .metric {
+            text-align: center;
+        }
+
+        .metric-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--accent-cyan);
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+
+        .metric-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        /* Premium Badge */
+        .premium-badge {
+            color: var(--accent-premium);
+            border: 1px solid var(--accent-premium);
+            padding: 2px 6px;
+            font-size: 0.6rem;
+            margin-left: 10px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Chart & DAG */
+        .chart-section {
+            height: var(--chart-height);
+        }
+        
+        .chart-container {
+            height: calc(100% - 3rem); /* Fill remaining space in card */
+        }
+        
+        .dag-section {
+            grid-column: 1 / -1; /* Full width */
+            padding-top: 0;
+            margin-top: -1rem;
+        }
+        
+        .blockdag-container {
+            height: 300px;
+            background: linear-gradient(135deg, rgba(0, 240, 255, 0.05) 0%, rgba(0, 255, 136, 0.05) 100%);
+            border-radius: 8px;
+            overflow: hidden;
+            margin-top: 1rem;
+        }
+
+        /* Whale Watch */
+        .whale-section {
+            margin-bottom: 3rem;
+        }
+
+        .section-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 8px;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            padding-bottom: 6px;
-        }
-        .panel-title {
-            color: var(--neon-cyan);
-            font-size: 0.85rem; 
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            white-space: nowrap; 
-        }
-        .panel-header span:last-child {
-            font-size: 0.65rem; 
+            margin-bottom: 1.5rem;
         }
 
-        /* --- CHART SECTION --- */
-        .chart-container {
-            height: calc(var(--chart-height) - 12px - 12px - 8px - 6px); 
-            width: 100%;
-        }
-
-        /* --- METRICS GRID --- */
-        .metrics-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr); 
-            gap: 8px; 
-            text-align: center;
-            padding-top: 5px;
-        }
-        .metric-box {
-            background: rgba(255,255,255,0.03);
-            padding: 8px 3px; 
-            border: 1px solid rgba(255,255,255,0.05);
-            height: 100%;
-            display: flex; 
-            flex-direction: column;
-            justify-content: center;
-        }
-        .metric-label {
-            font-size: 0.6rem; 
-            color: var(--text-muted);
-            margin-top: 2px;
-            text-transform: uppercase;
-        }
-        .metric-value {
-            font-size: 0.9rem; 
-            font-weight: bold;
-            color: #fff;
-        }
-        .gauge {
-            width: 35px; height: 35px; 
-            border-radius: 50%;
-            border: 2px solid rgba(255,255,255,0.1);
-            border-top: 2px solid var(--neon-cyan);
-            display: inline-flex;
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            display: flex;
             align-items: center;
-            justify-content: center;
-            box-shadow: 0 0 10px rgba(0, 243, 255, 0.2);
-            margin-bottom: 3px;
+            gap: 0.75rem;
         }
-        .gauge-value { font-size: 0.7rem; font-weight:bold; }
         
-        /* --- DAG INSPECTOR --- */
-        .dag-status {
-            display: flex;
-            justify-content: space-around;
-            padding-bottom: 8px;
-            margin-bottom: 8px;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            font-size: 0.75rem; 
-        }
-        .dag-status div span:first-child { font-size: 0.65rem; }
-        .dag-status div span:last-child { font-size: 0.8rem; }
-
-
-        .dag-viz-grid {
-            flex-grow: 1;
+        .whale-grid {
             display: grid;
-            grid-template-columns: 2fr 1fr; 
-            gap: 10px; 
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 1.5rem;
         }
-        .tangle-viz {
-            border: 1px dashed rgba(255,255,255,0.1);
-            padding: 5px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            position: relative;
+
+        /* KRC-20 Terminal */
+        .krc20-section {
+            margin-bottom: 3rem;
         }
-        .tangle-viz h4 { font-size: 0.75rem; }
-        .block-stream {
-            width: 95%;
-            height: 80%;
+        
+        .terminal-container {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
             overflow: hidden;
-            position: relative;
-            border: 1px solid rgba(255,255,255,0.1);
-            margin-top: 5px;
-        }
-        .block-lane {
-            display: flex;
-            height: 33.3%;
-            border-bottom: 1px dashed rgba(255,255,255,0.05);
-            align-items: center;
-            white-space: nowrap;
-        }
-        .block-unit {
-            display: inline-block;
-            width: 12px; 
-            height: 12px;
-            border-radius: 3px;
-            margin-right: 20px; 
-            transition: background-color 0.5s;
-            animation: flow 4s linear infinite;
-        }
-        .block-unit.unconfirmed { background-color: var(--neon-cyan); box-shadow: 0 0 5px var(--neon-cyan); }
-        .block-unit.confirmed { background-color: var(--neon-purple); box-shadow: 0 0 5px var(--neon-purple); }
-
-        @keyframes flow {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
         }
         
-        .speed-analyzer {
-            padding: 8px; 
-        }
-        .speed-analyzer h4 { font-size: 0.75rem; }
-        .speed-data-point {
-            font-size: 0.7rem; 
-            padding: 4px 0;
-        }
-
-        /* --- KRC TABLE & TOOLTIP STYLES --- */
-        table {
+        .terminal-table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 0.75rem; 
-        }
-        th, td {
-            padding: 6px; 
         }
         
-        .scan-cell {
-            position: relative; 
-        }
-
-        .btn-scan {
-            background: transparent;
-            border: 1px solid var(--neon-cyan);
-            color: var(--neon-cyan);
-            padding: 2px 6px;
-            font-size: 0.65rem; 
-            cursor: pointer;
-            transition: 0.2s;
-            font-family: inherit;
-        }
-        .btn-scan:hover {
-            background: var(--neon-cyan);
-            color: #000;
-            box-shadow: 0 0 15px var(--neon-cyan);
-        }
-
-        /* Tooltip Styles */
-        .tooltip {
-            visibility: hidden;
-            width: 150px;
-            background-color: var(--neon-purple);
-            color: var(--bg-deep);
-            text-align: center;
-            padding: 5px;
-            border-radius: 4px;
-            position: absolute;
-            z-index: 100;
-            bottom: 100%; 
-            left: 50%;
-            margin-left: -75px; 
-            opacity: 0;
-            transition: opacity 0.3s, visibility 0.3s;
-            font-size: 0.65rem;
-            white-space: normal;
-        }
-
-        .tooltip::after {
-            content: "";
-            position: absolute;
-            top: 100%;
-            left: 50%;
-            margin-left: -5px;
-            border-width: 5px;
-            border-style: solid;
-            border-color: var(--neon-purple) transparent transparent transparent;
-        }
-
-        .scan-cell:hover .tooltip {
-            visibility: visible;
-            opacity: 1;
-        }
-
-        /* --- KRC-20 Table Body Scrolling Fix --- */
-        .krc-table-content {
-            overflow-y: auto;
-            /* Ensures content takes up all remaining space in the panel */
-            flex-grow: 1; 
-        }
-
-
-        /* --- WHALE SONAR --- */
-        .sonar-container {
-            height: 70px; 
-            padding-bottom: 5px;
-        }
-        .orb.rank-1 {
-            width: 45px; height: 45px; 
-        }
-        .orb.rank-2 { width: 30px; height: 30px; }
-        .orb.rank-3 { width: 20px; height: 20px; }
-        .orb span { font-size: 0.6rem; }
-
-        .whale-list {
-            margin-top: 5px;
-            font-size: 0.7rem; 
-        }
-        .whale-row {
-            padding: 3px 0;
-        }
-
-        /* --- WALLET API & TX WATCH --- */
-        .wallet-panel {
-            gap: 8px;
-        }
-        .alert-box {
-            font-size: 0.65rem;
-            padding: 4px;
-        }
-        .mining-status {
-            font-size: 0.7rem;
-            padding: 4px 0;
-        }
-        .tx-list {
-            position: relative;
-            flex-grow: 1;
-            overflow: hidden; 
-            border: 1px solid rgba(255,255,255,0.05);
-            padding: 5px;
-        }
-        .tx-item {
-            font-size: 0.65rem; 
-            padding: 3px 0;
-        }
-        .tx-scroller {
-            position: absolute;
-            width: 100%;
-            animation: scroll-tx 20s linear infinite;
-        }
-        @keyframes scroll-tx {
-            0% { transform: translateY(0%); }
-            100% { transform: translateY(-50%); } 
-        }
-        
-        /* --- FOOTER FIX --- */
-        .status-bar {
-            /* CORRECTED POSITIONING: Locked to the bottom of the viewport */
-            position: fixed; 
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            padding: 4px 20px;
-            font-size: 0.65rem;
-            background: rgba(0,0,0,0.9);
-            border-top: 1px solid rgba(255,255,255,0.1);
-            display: flex;
-            justify-content: space-between;
+        .terminal-table th {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            padding: 1rem 1.5rem;
             color: var(--text-muted);
-            z-index: 1000; /* Ensure it stays above everything */
-            height: var(--footer-height);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            border-bottom: 1px solid var(--border);
         }
-        .status-online { color: var(--success); }
+
+        .terminal-table td {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid rgba(0, 240, 255, 0.05);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+        }
+        
+        .scan-btn {
+            background: var(--bg-primary);
+            color: var(--accent-cyan);
+            border: 1px solid var(--accent-cyan);
+            padding: 0.4rem 0.8rem;
+            border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            cursor: pointer;
+        }
+
+        /* Wallet and Mining Section */
+        .utility-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--gap-main);
+            margin-bottom: 3rem;
+        }
+
+        .utility-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+        }
+
+        /* Footer */
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 2rem;
+            text-align: center;
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            max-width: 1600px;
+            margin: 0 auto;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+        
+        .footer-credit a {
+            color: var(--accent-cyan);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .hero { grid-template-columns: 1fr; }
+            .utility-grid { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 768px) {
+            .container { padding: 1rem; }
+            .hero, .whale-grid { gap: 1rem; }
+            .section-title { font-size: 1.5rem; }
+        }
     </style>
 </head>
 <body>
-
-    <div class="scanlines"></div>
-    
-    <canvas id="rain-canvas"></canvas>
-
     <header>
-        <div class="logo">KASLIVE<span>_OS</span> v9.1</div>
-        <nav>
-            <a href="#">MARKET</a>
-            <a href="#" class="active">DAG</a>
-            <a href="#">KRC-20</a>
-            <a href="#">SONAR</a>
-        </nav>
-        <div style="color: var(--neon-cyan); font-size: 0.8rem;">
-            KAS: $0.0478 <span style="color: var(--danger)">-0.54%</span>
+        <div class="header-content">
+            <div class="logo">KAS<span style="color: var(--accent-green);">LIVE</span> v10.0</div>
+            <nav class="nav">
+                <a href="#whale" class="nav-link">WHALE_WATCH</a>
+                <a href="#krc20" class="nav-link">KRC-20</a>
+                <a href="#dag" class="nav-link">BLOCKDAG</a>
+                <a href="#utility" class="nav-link">UTILITY</a>
+            </nav>
+            <div class="price-badge">
+                <span>$<span id="kas-price">0.0478</span></span>
+                <span class="price-change negative" id="price-change">-0.54%</span>
+            </div>
         </div>
     </header>
 
     <div class="container">
-        
-        <div class="panel chart-panel">
-            <div class="panel-header">
-                <span class="panel-title">Market Overview // KAS-USDT</span>
-                <div>
-                    <button class="btn-scan">1H</button>
-                    <button class="btn-scan">4H</button>
-                    <button class="btn-scan">1D</button>
-                </div>
-            </div>
-            <div class="chart-container" id="tradingview_widget"></div>
-        </div>
-
-        <div class="panel network-panel">
-            <div class="panel-header">
-                <span class="panel-title">NETWORK METRICS</span>
-                <span style="color: var(--success)">● OPERATIONAL</span>
-            </div>
-            <div class="metrics-grid">
-                <div class="metric-box">
-                    <div class="gauge"><span class="gauge-value">1.0</span></div>
-                    <span class="metric-label">BPS</span>
-                </div>
-                <div class="metric-box">
-                    <span class="metric-value cyan">945.00</span>
-                    <span class="metric-label">PH/s</span>
-                </div>
-                <div class="metric-box">
-                    <span class="metric-value">27.10 B</span>
-                    <span class="metric-label">Supply</span>
-                </div>
-                <div class="metric-box">
-                    <span class="metric-value purple">18</span>
-                    <span class="metric-label">Days to Drop</span>
-                </div>
-                <div class="metric-box">
-                    <span class="metric-value">4.5M</span>
-                    <span class="metric-label">Block Count</span>
-                </div>
-                <div class="metric-box">
-                    <span class="metric-value danger">0.05%</span>
-                    <span class="metric-label">Orphan Rate</span>
-                </div>
-                <div class="metric-box">
-                    <span class="metric-value success">98%</span>
-                    <span class="metric-label">Sync Status</span>
-                </div>
-                <div class="metric-box">
-                    <span class="metric-value">620</span>
-                    <span class="metric-label">Nodes Active</span>
-                </div>
-                <div class="metric-box">
-                    <span class="metric-value cyan">3.2k</span>
-                    <span class="metric-label">TXs/Min</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="left-stack">
-            
-            <div class="panel krc-terminal-panel" style="flex-grow: 1;">
+        <section class="hero">
+            <div class="card chart-section">
                 <div class="panel-header">
-                    <span class="panel-title">KRC-20 TERMINAL // TOP ASSETS</span>
-                    <span style="color: var(--neon-purple)">Scanning...</span>
+                    <span class="panel-title">KAS PRICE CHART & MOMENTUM</span>
+                    <div class="chart-timeframe">
+                        <button>1H</button>
+                        <button>4H</button>
+                        <button>1D</button>
+                        <button>1W</button>
+                        <button>ALL</button>
+                    </div>
                 </div>
-                <div class="krc-table-content"> 
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Asset</th>
-                                <th>TVL</th>
-                                <th>Vol 24h</th>
-                                <th>Chg</th>
-                                <th>LPs</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr><td>NACHO</td><td>4.46M</td><td>115.4K</td><td style="color: var(--danger)">-4.70%</td><td>2.1K</td><td class="scan-cell">
-                                <button class="btn-scan">SCAN</button>
-                                <span class="tooltip">Contract Address Deep Scan: View liquidity, source code, and audit status.</span>
-                            </td></tr>
-                            <tr><td>KASPY</td><td>1.07M</td><td>25.2K</td><td style="color: var(--success)">+2.65%</td><td>1.8K</td><td class="scan-cell">
-                                <button class="btn-scan">SCAN</button>
-                                <span class="tooltip">Contract Address Deep Scan: View liquidity, source code, and audit status.</span>
-                            </td></tr>
-                            <tr><td>KANGO</td><td>776.5K</td><td>107.8K</td><td style="color: var(--danger)">-2.10%</td><td>0.9K</td><td class="scan-cell">
-                                <button class="btn-scan">SCAN</button>
-                                <span class="tooltip">Contract Address Deep Scan: View liquidity, source code, and audit status.</span>
-                            </td></tr>
-                            <tr><td>ZEAL</td><td>719.6K</td><td>55.8K</td><td style="color: var(--danger)">-2.24%</td><td>1.1K</td><td class="scan-cell">
-                                <button class="btn-scan">SCAN</button>
-                                <span class="tooltip">Contract Address Deep Scan: View liquidity, source code, and audit status.</span>
-                            </td></tr>
-                            <tr><td>KASPER</td><td>473.3K</td><td>51.7K</td><td style="color: var(--danger)">-11.78%</td><td>0.5K</td><td class="scan-cell">
-                                <button class="btn-scan">SCAN</button>
-                                <span class="tooltip">Contract Address Deep Scan: View liquidity, source code, and audit status.</span>
-                            </td></tr>
-                            <tr><td>PWWAS</td><td>363.0K</td><td>45.7K</td><td style="color: var(--success)">+0.88%</td><td>0.7K</td><td class="scan-cell">
-                                <button class="btn-scan">SCAN</button>
-                                <span class="tooltip">Contract Address Deep Scan: View liquidity, source code, and audit status.</span>
-                            </td></tr>
-                            <tr><td>MINER</td><td>210.1K</td><td>22.1K</td><td style="color: var(--danger)">-1.55%</td><td>0.4K</td><td class="scan-cell">
-                                <button class="btn-scan">SCAN</button>
-                                <span class="tooltip">Contract Address Deep Scan: View liquidity, source code, and audit status.</span>
-                            </td></tr>
+                <div class="chart-container">
+                    <canvas id="kasPriceChart"></canvas>
+                </div>
+            </div>
+
+            <div class="card" id="network">
+                <div class="card-title">
+                    <span class="status-dot"></span>
+                    NETWORK STATUS
+                </div>
+                <div class="network-grid">
+                    <div class="metric">
+                        <span class="metric-value" id="blocks-per-sec">1.0</span>
+                        <span class="metric-label">Blocks/Sec</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-value" id="hashrate">945</span>
+                        <span class="metric-label">PH/s</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-value" id="health-score" style="color: var(--accent-green);">90/100</span>
+                        <span class="metric-label">Health Score<span class="premium-badge">PREM</span></span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-value" id="supply">27.1B</span>
+                        <span class="metric-label">Supply</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-value" id="nodes">620</span>
+                        <span class="metric-label">Active Nodes</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-value" id="txs-min">3.2k</span>
+                        <span class="metric-label">TXs/Min</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="dag-section" id="dag">
+            <div class="card">
+                <div class="card-title">
+                    <span style="color: var(--accent-cyan);">🌐</span>
+                    BLOCKDAG INSPECTOR
+                </div>
+                <div class="blockdag-container">
+                    <canvas id="blockdag-canvas"></canvas>
+                    <div class="dag-overlay">
+                        <div>BLOCKS: <span id="block-count">4,500,000</span></div>
+                        <div>TIP: <span id="tip-hash">0x4f...c1d</span></div>
+                        <div style="margin-top: 5px;">Latency: 1.1s</div>
+                    </div>
+                </div>
+                <div style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 1rem; text-align: center;">
+                    Visualizing the parallel block creation and confirmation (Green = Confirmed, Cyan = Pending)
+                </div>
+            </div>
+        </section>
+
+        <section class="utility-grid" id="utility">
+            <div class="utility-card">
+                <h3 class="section-title" style="font-size: 1.5rem;">
+                    <span style="color: var(--accent-cyan);">💼</span>
+                    PORTFOLIO TRACKER
+                    <span class="premium-badge">PREM</span>
+                </h3>
+                <div style="margin-top: 1rem;">
+                    <p style="font-family: 'JetBrains Mono', monospace; margin-bottom: 1rem;">
+                        Total Value: $<span id="portfolio-value">12,500.50</span> (24h: <span style="color: var(--accent-green);">+1.2%</span>)
+                    </p>
+                    <div style="max-height: 200px; overflow-y: auto;">
+                        <table style="width: 100%; font-size: 0.8rem;">
+                            <thead>
+                                <tr><th>Wallet</th><th>Balance</th><th>P&L (24h)</th></tr>
+                            </thead>
+                            <tbody id="portfolio-table">
+                                </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="utility-card">
+                <h3 class="section-title" style="font-size: 1.5rem;">
+                    <span style="color: var(--accent-green);">⛏️</span>
+                    MINING CALCULATOR
+                    <span class="premium-badge">PREM</span>
+                </h3>
+                <div style="font-family: 'JetBrains Mono', monospace; margin-top: 1rem; font-size: 0.85rem;">
+                    <div style="margin-bottom: 1rem;">
+                        <label for="hashrate-input" style="color: var(--text-secondary);">Your Hashrate (GH/s):</label>
+                        <input type="number" id="hashrate-input" value="12.5" style="width: 100px; background: var(--bg-tertiary); border: 1px solid var(--border); color: var(--accent-cyan); padding: 5px;">
+                    </div>
+                    <p>Est. Daily KAS: <span style="color: var(--accent-cyan);">4,500</span></p>
+                    <p>Est. Daily Profit: <span style="color: var(--accent-green);">$202.50</span></p>
+                    <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.5rem;">
+                        Based on 945 PH/s network hashrate and $0.0478 KAS price.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section class="whale-section" id="whale">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <span class="section-icon" style="background: var(--accent-cyan); color: var(--bg-primary);">🐋</span>
+                    WHALE SONAR (TOP 6)
+                </h2>
+            </div>
+            <div class="whale-grid" id="whale-grid">
+                </div>
+        </section>
+
+        <section class="krc20-section" id="krc20">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <span class="section-icon" style="background: var(--accent-green); color: var(--bg-primary);">⚡</span>
+                    KRC-20 TERMINAL
+                </h2>
+            </div>
+            <div class="terminal-container">
+                <div class="terminal-header">
+                    <div class="terminal-title">&gt; LIVE ASSET TRACKING</div>
+                    <div class="terminal-controls">
+                        <span class="terminal-dot"></span>
+                        <span class="terminal-dot"></span>
+                        <span class="terminal-dot active"></span>
+                    </div>
+                </div>
+                <table class="terminal-table">
+                    <thead>
+                        <tr>
+                            <th>ASSET</th>
+                            <th>TVL</th>
+                            <th>VOL 24H</th>
+                            <th>CHANGE</th>
+                            <th>LPs</th>
+                            <th>ACTION</th>
+                        </tr>
+                    </thead>
+                    <tbody id="krc20-table">
                         </tbody>
-                    </table>
-                </div>
+                </table>
             </div>
+        </section>
 
-            <div class="panel dag-inspector-panel" style="flex-grow: 1;">
-                <div class="panel-header">
-                    <span class="panel-title">DAG BLOCK INSPECTOR</span>
-                    <span style="color: var(--neon-purple)">Tangle Flow & Speed Analysis</span>
-                </div>
-                <div class="dag-status">
-                    <div><span>Tip Hash</span><span>0x4f...c1d</span></div>
-                    <div><span>Orphan/Stale Rate</span><span class="low-danger">0.05%</span></div>
-                    <div><span>In-Flight TXs</span><span class="success-value">1,452</span></div>
-                    <div><span>Blocks/Sec (Target)</span><span class="success-value">1.0 B/S</span></div>
-                </div>
-
-                <div class="dag-viz-grid">
-                    <div class="tangle-viz">
-                        <h4>BLOCK TANGLE FLOW (1 B/S)</h4>
-                        <div class="block-stream">
-                            <div class="block-lane">
-                                <span class="block-unit confirmed"></span>
-                                <span class="block-unit unconfirmed"></span>
-                                <span class="block-unit confirmed"></span>
-                                <span class="block-unit unconfirmed"></span>
-                                <span class="block-unit confirmed"></span>
-                                <span class="block-unit unconfirmed"></span>
-                                <span class="block-unit confirmed"></span>
-                            </div>
-                            <div class="block-lane">
-                                <span class="block-unit unconfirmed" style="animation-delay: -1.5s;"></span>
-                                <span class="block-unit confirmed" style="animation-delay: -3s;"></span>
-                                <span class="block-unit unconfirmed" style="animation-delay: -0.5s;"></span>
-                                <span class="block-unit confirmed" style="animation-delay: -2s;"></span>
-                                <span class="block-unit unconfirmed" style="animation-delay: -4s;"></span>
-                            </div>
-                            <div class="block-lane" style="border-bottom: none;">
-                                <span class="block-unit confirmed" style="animation-delay: -2.5s;"></span>
-                                <span class="block-unit confirmed" style="animation-delay: -1s;"></span>
-                                <span class="block-unit unconfirmed" style="animation-delay: -3.5s;"></span>
-                                <span class="block-unit confirmed" style="animation-delay: -0.2s;"></span>
-                                <span class="block-unit unconfirmed" style="animation-delay: -1.8s;"></span>
-                            </div>
-                        </div>
-                        <p style="font-size:0.65rem; color: var(--text-muted); margin-top: 5px;">(Green = Created / Purple = Confirmed)</p>
-                    </div>
-
-                    <div class="speed-analyzer">
-                        <h4>SPEED & LATENCY ANALYZER</h4>
-                        <div class="speed-data-point"><span>Avg Block Time</span><span>980 ms</span></div>
-                        <div class="speed-data-point"><span>Block Inclusion Latency</span><span>3.2 s</span></div>
-                        <div class="speed-data-point"><span>Network Latency (Avg)</span><span>150 ms</span></div>
-                        <div class="speed-data-point"><span>Max Block Jitter</span><span>120 ms</span></div>
-                        <div class="speed-data-point"><span>Median Confirmation Depth</span><span>10 Blocks</span></div>
-                    </div>
-                </div>
+        <section class="whale-section">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <span class="section-icon" style="background: var(--accent-cyan); color: var(--bg-primary);">📡</span>
+                    LIVE TRANSACTION FEED
+                </h2>
             </div>
-        </div>
-
-        <div class="right-stack">
-            
-            <div class="panel whale-sonar-panel" style="flex-grow: 1;">
-                <div class="panel-header">
-                    <span class="panel-title">WHALE SONAR (TOP 5)</span>
+            <div class="tx-feed" id="tx-feed">
                 </div>
-                
-                <div class="sonar-container">
-                    <div class="orb rank-1"><span>#1</span></div>
-                    <div class="orb rank-2"><span>#2</span></div>
-                    <div class="orb rank-3"><span>#3</span></div>
-                </div>
-
-                <div class="whale-list">
-                    <div class="whale-row">
-                        <span style="color:var(--neon-purple)">#1 Dev Fund</span>
-                        <span>1.25 B</span>
-                    </div>
-                    <div class="whale-row">
-                        <span style="color:var(--neon-cyan)">#2 MEXC</span>
-                        <span>350.00 M</span>
-                    </div>
-                    <div class="whale-row">
-                        <span>#3 Whale</span>
-                        <span>210.00 M</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="panel wallet-panel" style="flex-grow: 1.5;"> 
-                <div class="panel-header">
-                    <span class="panel-title">WALLET API & TX WATCH</span>
-                    <span style="color: var(--neon-cyan)">Live Stream</span>
-                </div>
-                
-                <div class="alert-box">
-                    <p>🚨 **Active Session Alert:** Kaspa Wallet Connected (0xfa3...b7c)</p>
-                </div>
-
-                <div class="mining-status">
-                    <span>P.O.W. Status:</span>
-                    <span style="color: var(--success)">Active @ 12.5 GH/s</span>
-                </div>
-
-                <div class="tx-list">
-                    <div class="tx-scroller">
-                        <div class="tx-item"><span>0x2a...f9c (Rec)</span><span class="tx-amount">+ 1,200 KAS</span></div>
-                        <div class="tx-item"><span>0x7d...a11 (Sent)</span><span style="color: var(--danger)">- 80 KAS</span></div>
-                        <div class="tx-item"><span>0x1c...e3b (Rec)</span><span class="tx-amount">+ 50,000 KAS</span></div>
-                        <div class="tx-item"><span>0x8f...2g4 (Sent)</span><span style="color: var(--danger)">- 15,000 KAS</span></div>
-                        <div class="tx-item"><span>0x2a...f9c (Rec)</span><span class="tx-amount">+ 1,200 KAS</span></div>
-                        <div class="tx-item"><span>0x7d...a11 (Sent)</span><span style="color: var(--danger)">- 80 KAS</span></div>
-                        <div class="tx-item"><span>0x1c...e3b (Rec)</span><span class="tx-amount">+ 50,000 KAS</span></div>
-                        <div class="tx-item"><span>0x8f...2g4 (Sent)</span><span style="color: var(--danger)">- 15,000 KAS</span></div>
-                        <div class="tx-item"><span>0x2a...f9c (Rec)</span><span class="tx-amount">+ 1,200 KAS</span></div>
-                        <div class="tx-item"><span>0x7d...a11 (Sent)</span><span style="color: var(--danger)">- 80 KAS</span></div>
-                        <div class="tx-item"><span>0x1c...e3b (Rec)</span><span class="tx-amount">+ 50,000 KAS</span></div>
-                        <div class="tx-item"><span>0x8f...2g4 (Sent)</span><span style="color: var(--danger)">- 15,000 KAS</span></div>
-                        <div class="tx-item"><span>0x7d...a11 (Sent)</span><span style="color: var(--danger)">- 80 KAS</span></div>
-                        <div class="tx-item"><span>0x2a...f9c (Rec)</span><span class="tx-amount">+ 1,200 KAS</span></div>
-                        <div class="tx-item"><span>0x7d...a11 (Sent)</span><span style="color: var(--danger)">- 80 KAS</span></div>
-                        <div class="tx-item"><span>0x1c...e3b (Rec)</span><span class="tx-amount">+ 50,000 KAS</span></div>
-                        <div class="tx-item"><span>0x8f...2g4 (Sent)</span><span style="color: var(--danger)">- 15,000 KAS</span></div>
-                        <div class="tx-item"><span>0x2a...f9c (Rec)</span><span class="tx-amount">+ 1,200 KAS</span></div>
-                        <div class="tx-item"><span>0x7d...a11 (Sent)</span><span style="color: var(--danger)">- 80 KAS</span></div>
-                        <div class="tx-item"><span>0x1c...e3b (Rec)</span><span class="tx-amount">+ 50,000 KAS</span></div>
-                        <div class="tx-item"><span>0x8f...2g4 (Sent)</span><span style="color: var(--danger)">- 15,000 KAS</span></div>
-                        <div class="tx-item"><span>0x2a...f9c (Rec)</span><span class="tx-amount">+ 1,200 KAS</span></div>
-                        <div class="tx-item"><span>0x7d...a11 (Sent)</span><span style="color: var(--danger)">- 80 KAS</span></div>
-                        <div class="tx-item"><span>0x1c...e3b (Rec)</span><span class="tx-amount">+ 50,000 KAS</span></div>
-                        <div class="tx-item"><span>0x8f...2g4 (Sent)</span><span style="color: var(--danger)">- 15,000 KAS</span></div>
-                        <div class="tx-item"><span>0x7d...a11 (Sent)</span><span style="color: var(--danger)">- 80 KAS</span></div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        </section>
     </div>
 
-    <div class="status-bar">
-        <span>VOL (24H): 28.24M</span>
-        <span>SYSTEM: <span class="status-online">ONLINE</span></span>
-        <span>CAP: 1.28B</span>
-    </div>
-
-    <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
-    <script type="text/javascript">
-    new TradingView.widget(
-    {
-        "width": "100%",
-        "height": "100%",
-        "symbol": "MEXC:KASUSDT",
-        "interval": "60",
-        "timezone": "Etc/UTC",
-        "theme": "dark",
-        "style": "1",
-        "locale": "en",
-        "toolbar_bg": "#f1f3f6",
-        "enable_publishing": false,
-        "hide_top_toolbar": false,
-        "allow_symbol_change": true,
-        "container_id": "tradingview_widget",
-        "hide_side_toolbar": false
-    });
-    </script>
+    <footer>
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="#" class="footer-link">EXPLORER</a>
+                <a href="#" class="footer-link">API</a>
+                <a href="#" class="footer-link">DOCS</a>
+                <a href="#" class="footer-link">GITHUB</a>
+            </div>
+            <div class="footer-credit">
+                KASLIVE v10.0 // A <a href="mailto:dnilgis@gmail.com" class="footer-credit-link" style="color: var(--accent-cyan);">dnilgis Project</a>
+            </div>
+            <div style="margin-top: 0.5rem; font-size: 0.75rem;">Built for Kaspa Believers</div>
+        </div>
+    </footer>
 
     <script>
-        const canvas = document.getElementById('rain-canvas');
-        const ctx = canvas.getContext('2d');
+        // Sample Data for Backend Injection
+        const whales = [
+            { rank: 1, label: 'Dev Fund', address: '0xfa3...b7c', amount: '1.25B', lastTx: '2m ago', txCount: 1247 },
+            { rank: 2, label: 'MEXC', address: '0x7d1...a11', amount: '350.00M', lastTx: '5m ago', txCount: 8943 },
+            { rank: 3, label: 'Whale Alpha', address: '0x1c8...e3b', amount: '210.00M', lastTx: '12m ago', txCount: 534 },
+            { rank: 4, label: 'Accumulator', address: '0x8f2...2g4', amount: '185.50M', lastTx: '8m ago', txCount: 2156 },
+            { rank: 5, label: 'Diamond Hands', address: '0x3a9...k5h', amount: '172.30M', lastTx: '1h ago', txCount: 89 },
+            { rank: 6, label: 'Early Miner', address: '0x6b4...m9j', amount: '156.80M', lastTx: '25m ago', txCount: 1843 }
+        ];
 
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+        const krc20Tokens = [
+            { asset: 'NACHO', tvl: '4.46M', vol: '115.4K', change: -4.70, lps: '2.1K' },
+            { asset: 'KASPY', tvl: '1.07M', vol: '25.2K', change: 2.65, lps: '1.8K' },
+            { asset: 'KANGO', tvl: '776.5K', vol: '107.8K', change: -2.10, lps: '0.9K' },
+            { asset: 'ZEAL', tvl: '719.6K', vol: '55.8K', change: -2.24, lps: '1.1K' },
+            { asset: 'KASPER', tvl: '473.3K', vol: '51.7K', change: -11.78, lps: '0.5K' },
+            { asset: 'PWWAS', tvl: '363.0K', vol: '45.7K', change: 0.88, lps: '0.7K' },
+            { asset: 'MINER', tvl: '210.1K', vol: '22.1K', change: -1.55, lps: '0.4K' }
+        ];
 
-        const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789^$!@#%&*()-+';
+        const portfolio = [
+             { wallet: '0xfa3...b7c', balance: '10,000 KAS', change: 0.05 },
+             { wallet: '0x7d1...a11', balance: '2,500 KAS', change: -1.25 },
+        ];
 
-        const fontSize = 16;
-        const columns = canvas.width/fontSize;
 
-        const rainDrops = [];
-
-        for( let x = 0; x < columns; x++ ) {
-            rainDrops[x] = 1;
+        // --- RENDERING FUNCTIONS ---
+        
+        function renderWhales() {
+            const whaleGrid = document.getElementById('whale-grid');
+            whaleGrid.innerHTML = whales.map(whale => `
+                <div class="whale-card">
+                    <div class="whale-header">
+                        <div>
+                            <div class="whale-label">${whale.label}</div>
+                            <div class="whale-address">${whale.address}</div>
+                        </div>
+                        <div class="whale-rank">RANK #${whale.rank}</div>
+                    </div>
+                    <div class="whale-amount" style="color: ${whale.rank === 1 ? 'var(--accent-green)' : 'var(--accent-cyan)'}">${whale.amount} KAS</div>
+                    <div class="whale-activity">
+                        <div class="activity-item">
+                            <span class="activity-dot"></span>
+                            Last TX: ${whale.lastTx}
+                        </div>
+                        <div class="activity-item">
+                            <span class="activity-dot"></span>
+                            ${whale.txCount} TXs
+                        </div>
+                    </div>
+                </div>
+            `).join('');
         }
 
-        const draw = () => {
-            ctx.fillStyle = 'rgba(5, 5, 11, 0.05)';
-            ctx.fillRect(0, 0,
+        function renderKRC20() {
+            const table = document.getElementById('krc20-table');
+            table.innerHTML = krc20Tokens.map(token => `
+                <tr>
+                    <td class="token-name">${token.asset}</td>
+                    <td class="token-value">$${token.tvl}</td>
+                    <td class="token-value">$${token.vol}</td>
+                    <td class="${token.change >= 0 ? 'change-positive' : 'change-negative'}">
+                        ${token.change >= 0 ? '+' : ''}${token.change.toFixed(2)}%
+                    </td>
+                    <td>${token.lps}</td>
+                    <td><button class="scan-btn">SCAN</button></td>
+                </tr>
+            `).join('');
+        }
+        
+        function renderPortfolio() {
+            const table = document.getElementById('portfolio-table');
+            table.innerHTML = portfolio.map(item => `
+                <tr>
+                    <td style="font-size: 0.75rem;">${item.wallet}</td>
+                    <td style="color: var(--accent-cyan);">${item.balance}</td>
+                    <td class="${item.change >= 0 ? 'change-positive' : 'change-negative'}">
+                        ${item.change >= 0 ? '+' : ''}${item.change.toFixed(2)}%
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // --- DAG VISUALIZATION CLASS (AS BEFORE) ---
+        class BlockDAGVisualizer {
+            constructor(canvasId) {
+                this.canvas = document.getElementById(canvasId);
+                this.ctx = this.canvas.getContext('2d');
+                this.blocks = [];
+                this.maxBlocks = 100;
+                this.init();
+            }
+
+            init() {
+                this.resizeCanvas();
+                window.addEventListener('resize', () => this.resizeCanvas());
+                this.animate();
+            }
+
+            resizeCanvas() {
+                const rect = this.canvas.getBoundingClientRect();
+                this.canvas.width = rect.width;
+                this.canvas.height = rect.height;
+            }
+
+            addBlock() {
+                if (this.blocks.length >= this.maxBlocks) {
+                    this.blocks.shift();
+                }
+
+                const block = {
+                    x: Math.random() * this.canvas.width,
+                    y: this.canvas.height + 20,
+                    vx: (Math.random() - 0.5) * 2,
+                    vy: -2 - Math.random() * 2,
+                    size: 4 + Math.random() * 4,
+                    opacity: 1,
+                    confirmed: Math.random() > 0.3,
+                    connections: []
+                };
+
+                // Create connections to nearby blocks
+                this.blocks.forEach(b => {
+                    const dist = Math.hypot(block.x - b.x, block.y - b.y);
+                    if (dist < 150 && Math.random() > 0.7) {
+                        block.connections.push(b);
+                    }
+                });
+
+                this.blocks.push(block);
+            }
+
+            update() {
+                this.blocks.forEach(block => {
+                    block.x += block.vx;
+                    block.y += block.vy;
+                    block.opacity -= 0.005;
+
+                    // Boundary check
+                    if (block.x < 0 || block.x > this.canvas.width) {
+                        block.vx *= -1;
+                    }
+                });
+
+                // Remove faded blocks
+                this.blocks = this.blocks.filter(b => b.opacity > 0);
+            }
+
+            draw() {
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+                // Draw connections
+                this.blocks.forEach(block => {
+                    block.connections.forEach(target => {
+                        this.ctx.beginPath();
+                        this.ctx.moveTo(block.x, block.y);
+                        this.ctx.lineTo(target.x, target.y);
+                        this.ctx.strokeStyle = `rgba(0, 240, 255, ${Math.min(block.opacity, target.opacity) * 0.2})`;
+                        this.ctx.lineWidth = 1;
+                        this.ctx.stroke();
+                    });
+                });
+
+                // Draw blocks
+                this.blocks.forEach(block => {
+                    const color = block.confirmed ? '0, 255, 136' : '0, 240, 255';
+                    
+                    // Glow
+                    this.ctx.beginPath();
+                    this.ctx.arc(block.x, block.y, block.size + 4, 0, Math.PI * 2);
+                    const gradient = this.ctx.createRadialGradient(
+                        block.x, block.y, 0,
+                        block.x, block.y, block.size + 4
+                    );
+                    gradient.addColorStop(0, `rgba(${color}, ${block.opacity * 0.6})`);
+                    gradient.addColorStop(1, `rgba(${color}, 0)`);
+                    this.ctx.fillStyle = gradient;
+                    this.ctx.fill();
+
+                    // Block
+                    this.ctx.beginPath();
+                    this.ctx.arc(block.x, block.y, block.size, 0, Math.PI * 2);
+                    this.ctx.fillStyle = `rgba(${color}, ${block.opacity})`;
+                    this.ctx.fill();
+                });
+            }
+
+            animate() {
+                if (Math.random() > 0.7) {
+                    this.addBlock();
+                }
+                this.update();
+                this.draw();
+                requestAnimationFrame(() => this.animate());
+            }
+        }
+
+
+        // Transaction Feed and Price Update (As before)
+        function addTransaction() {
+            const feed = document.getElementById('tx-feed');
+            const isSend = Math.random() > 0.5;
+            const amount = (Math.random() * 50000 + 100).toFixed(2);
+            const address = '0x' + Math.random().toString(36).substring(2, 8) + '...' + Math.random().toString(36).substring(2, 5);
+
+            const tx = document.createElement('div');
+            tx.className = 'tx-item';
+            tx.innerHTML = `
+                <div>
+                    <div class="tx-address">${address}</div>
+                    <div class="tx-type">${isSend ? 'SENT' : 'RECEIVED'}</div>
+                </div>
+                <div class="tx-amount ${isSend ? 'send' : ''}">${isSend ? '-' : '+'}${amount} KAS</div>
+            `;
+
+            feed.insertBefore(tx, feed.firstChild);
+
+            // Keep only last 20 transactions
+            while (feed.children.length > 20) {
+                feed.removeChild(feed.lastChild);
+            }
+        }
+
+        function updatePrice() {
+            const priceEl = document.getElementById('kas-price');
+            const changeEl = document.getElementById('price-change');
+            
+            const currentPrice = parseFloat(priceEl.textContent);
+            const change = (Math.random() - 0.5) * 0.002;
+            const newPrice = (currentPrice + change).toFixed(4);
+            const percentChange = ((change / currentPrice) * 100).toFixed(2);
+
+            priceEl.textContent = newPrice;
+            changeEl.textContent = `${percentChange >= 0 ? '+' : ''}${percentChange}%`;
+            changeEl.className = percentChange >= 0 ? 'price-change positive' : 'price-change negative';
+        }
+
+
+        // --- CHART.JS INITIALIZATION ---
+        function initializeChart() {
+            const ctx = document.getElementById('kasPriceChart').getContext('2d');
+            
+            // Placeholder Data - Replace with data fetched from your Python backend API
+            const placeholderData = {
+                labels: ['01/12', '03/12', '05/12', '07/12', '09/12', '11/12', '12/12'],
+                datasets: [{
+                    label: 'KAS Price (USD)',
+                    data: [0.045, 0.0465, 0.044, 0.047, 0.0455, 0.0475, 0.046],
+                    borderColor: 'rgba(0, 240, 255, 1)',
+                    backgroundColor: 'rgba(0, 240, 255, 0.1)',
+                    borderWidth: 2,
+                    pointRadius: 0,
+                    tension: 0.4,
+                    fill: true,
+                }]
+            };
+
+            new Chart(ctx, {
+                type: 'line',
+                data: placeholderData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                            backgroundColor: 'rgba(5, 5, 11, 0.8)',
+                            titleFont: { family: 'JetBrains Mono' },
+                            bodyFont: { family: 'JetBrains Mono' },
+                            borderColor: 'var(--accent-cyan)',
+                            borderWidth: 1
+                        }
+                    },
+                    scales: {
+                        x: {
+                            ticks: { color: 'var(--text-muted)', font: { family: 'JetBrains Mono' } },
+                            grid: { color: 'rgba(255, 255, 255, 0.05)' }
+                        },
+                        y: {
+                            ticks: { color: 'var(--text-muted)', font: { family: 'JetBrains Mono' } },
+                            grid: { color: 'rgba(255, 255, 255, 0.05)' }
+                        }
+                    }
+                }
+            });
+        }
+
+
+        // --- INITIALIZE ALL COMPONENTS ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderWhales();
+            renderKRC20();
+            renderPortfolio();
+            initializeChart();
+            new BlockDAGVisualizer('blockdag-canvas');
+
+            // Update streams
+            setInterval(addTransaction, 2000 + Math.random() * 3000);
+            setInterval(updatePrice, 5000);
+
+            // Add smooth scroll
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
