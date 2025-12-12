@@ -1,23 +1,54 @@
 import json
+import requests
 import os
 
-# --- Static Replication of L2 Project Data ---
-# Must be manually updated until a new L2 tracking API is found.
-L2_PROJECTS = [
-    {"name": "Zealous Swap", "tvl": "1.6M", "volume_24h": "17.5K", "category": "DeFi", "network": "Kasplex", "visit": "#"},
-    {"name": "LFG.KASPA", "tvl": "82.5K", "volume_24h": "975.3", "category": "DeFi, Meme", "network": "Kasplex", "visit": "#"},
-    {"name": "KSPR", "tvl": "26.5K", "volume_24h": "336.7", "category": "DeFi, Meme", "network": "Kasplex", "visit": "#"},
-    {"name": "Kaspa Finance", "tvl": "15K", "volume_24h": "340.7", "category": "DeFi", "network": "Kasplex", "visit": "#"},
-    {"name": "Moonbound", "tvl": "2.0", "volume_24h": "0.2", "category": "DeFi, Meme", "network": "Kasplex", "visit": "#"},
-]
+# CoinGecko Kaspa Ecosystem Endpoint
+KRC20_API = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&category=kaspa-ecosystem&order=market_cap_desc"
 
 def fetch_l2_data():
+    projects = []
+    total_tvl = 0
+    total_vol = 0
+    
+    try:
+        response = requests.get(KRC20_API, timeout=10)
+        if response.status_code == 200:
+            data = response.json()
+            
+            for item in data:
+                # Filter to ensure we are getting KRC20-like tokens or main ecosystem coins
+                if item['id'] == 'kaspa': continue # Skip KAS itself
+                
+                projects.append({
+                    "name": item['name'],
+                    "symbol": item['symbol'].upper(),
+                    "price": item['current_price'],
+                    "tvl": item.get('market_cap', 0), # Using MCAP as proxy for TVL/Size
+                    "volume_24h": item['total_volume'],
+                    "change_24h": item.get('price_change_percentage_24h', 0),
+                    "category": "KRC-20",
+                    "network": "Kasplex",
+                    "visit": f"https://www.coingecko.com/en/coins/{item['id']}"
+                })
+                
+                total_tvl += item.get('market_cap', 0) or 0
+                total_vol += item.get('total_volume', 0) or 0
+                
+    except Exception as e:
+        print(f"CoinGecko KRC20 fetch failed: {e}")
+        # FALLBACK: Keep your old manual list if API fails
+        projects = [
+            {"name": "Nacho the Kat", "symbol": "NACHO", "tvl": 50000000, "volume_24h": 120000, "change_24h": 0, "category": "Meme", "network": "Kasplex", "visit": "#"},
+            {"name": "Kasper", "symbol": "KASPER", "tvl": 7500000, "volume_24h": 45000, "change_24h": 0, "category": "Meme", "network": "Kasplex", "visit": "#"}
+        ]
+
+    # Format Summary
     l2_stats = {
-        "total_tvl": "1.8M", 
-        "total_volume_24h": "19.2K",
-        "total_projects": len(L2_PROJECTS),
-        "networks_split": "5 / 0 (Kasplex / IGRA)", 
-        "projects": L2_PROJECTS
+        "total_tvl": f"{total_tvl / 1_000_000:.1f}M", 
+        "total_volume_24h": f"{total_vol / 1_000:.1f}K",
+        "total_projects": len(projects),
+        "networks_split": f"{len(projects)} / 0 (Kasplex / IGRA)", 
+        "projects": projects
     }
     
     os.makedirs('data', exist_ok=True)
