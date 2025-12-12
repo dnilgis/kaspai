@@ -3,7 +3,7 @@ name: Update Dashboard Data
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 * * * *' # Runs every hour
+    - cron: '*/30 * * * *' # Runs every 30 minutes
 
 jobs:
   update-dashboard:
@@ -23,15 +23,11 @@ jobs:
       - name: Install dependencies
         run: pip install requests
 
-      - name: Run all data fetch scripts
-        run: |
-          python scripts/1_fetch_market_data.py
-          python scripts/2_fetch_network_data.py
-          python scripts/3_fetch_l2_data.py
-          python scripts/4_fetch_whale_data.py
+      - name: Run Master Data Script
+        run: python scripts/update_all_data.py
 
       - name: Commit and Push changes
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           file_pattern: 'data/*.json' 
-          commit_message: 'Automated data update: Hourly dashboard refresh'
+          commit_message: 'Automated dashboard refresh'
