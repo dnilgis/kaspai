@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KASPA Successor Dashboard</title>
+    <title>KASLIVE | Successor Dashboard</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <link rel="icon" href="https://cryptologos.cc/logos/kaspa-kas-logo.png" type="image/png">
 </head>
 <body>
     <header>
@@ -13,18 +14,19 @@
             ⚠️ Successor Dashboard: Built for Community Continuity 🛠️
         </div>
         <div class="header-content">
-            <div class="logo">KASPA DASHBOARD</div>
+            <div class="logo">KASLIVE <span style="font-size:0.6em; color:#666; font-weight:normal;">(Beta)</span></div>
             <nav>
-                <a href="#l2">L2 Projects</a>
-                <a href="#stats">Network Stats</a>
+                <a href="#stats">Network</a>
+                <a href="#l2">KRC-20 Tokens</a>
                 <a href="#whales">Whale Watch</a>
-                <a href="#emissions">Emission Schedule</a>
+                <a href="#market">Market</a>
             </nav>
         </div>
     </header>
 
     <main class="dashboard-grid">
-        <section class="card market-stats-card">
+        
+        <section id="market" class="card market-stats-card">
             <h2>KAS Market Stats</h2>
             <div class="stat-group">
                 <div class="stat-item">
@@ -71,6 +73,7 @@
             <div class="card metric-box large">
                 <p class="metric-label">Hashrate</p>
                 <p id="hashrate" class="metric-value">--</p>
+                <p class="stat-detail">Network Security</p>
             </div>
             <div class="card metric-box">
                 <p class="metric-label">Mined %</p>
@@ -87,43 +90,51 @@
             </div>
         </section>
 
-        <section id="l2" class="card l2-tracker-card full-width">
-            <h2>L2 Projects Tracker (Successor Index)</h2>
-            <div class="l2-summary">
-                <div class="l2-summary-item">Total Value Locked: <span id="total-tvl">--</span></div>
-                <div class="l2-summary-item">24h Volume: <span id="total-volume-24h">--</span></div>
-                <div class="l2-summary-item">Total Projects: <span id="total-projects">--</span></div>
-                <div class="l2-summary-item">Network Split: <span id="networks-split">--</span></div>
+        <section id="l2" class="card full-width">
+            <div class="section-header">
+                <h2>💎 KRC-20 Ecosystem Tracker</h2>
+                <span class="live-badge">● Live Data</span>
             </div>
-            <table id="l2-projects-table">
-                <thead>
-                    <tr>
-                        <th>Project Name</th>
-                        <th>TVL</th>
-                        <th>24h Volume</th>
-                        <th>Categories</th>
-                        <th>Network</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    </tbody>
-            </table>
+            
+            <div class="l2-summary">
+                <div class="l2-summary-item">Total Cap: <span id="total-tvl">--</span></div>
+                <div class="l2-summary-item">24h Vol: <span id="total-volume-24h">--</span></div>
+                <div class="l2-summary-item">Tokens Tracked: <span id="total-projects">--</span></div>
+            </div>
+            
+            <div class="table-container">
+                <table id="l2-projects-table">
+                    <thead>
+                        <tr>
+                            <th>Token</th>
+                            <th>Market Cap (TVL)</th>
+                            <th>Volume (24h)</th>
+                            <th>24h Change</th>
+                            <th>Network</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        </tbody>
+                </table>
+            </div>
         </section>
 
         <section id="whales" class="card full-width">
-            <h2>🐳 Whale Watch (Top 50 Rich List)</h2>
-            <p style="color:#666; font-size: 0.9em; margin-bottom: 15px;">Tracking the largest wallets on the Kaspa network.</p>
+            <div class="section-header">
+                <h2>🐳 Whale Watch (Top 50)</h2>
+                <p class="section-subtitle">Tracking the largest wallets on the Kaspa network.</p>
+            </div>
             
-            <div style="overflow-x: auto;">
-                <table id="whale-table" style="width: 100%; border-collapse: collapse;">
+            <div class="table-container">
+                <table id="whale-table">
                     <thead>
-                        <tr style="background-color: #f9f9f9; text-align: left;">
-                            <th style="padding: 10px;">Rank</th>
-                            <th style="padding: 10px;">Address</th>
-                            <th style="padding: 10px;">Known Tag</th>
-                            <th style="padding: 10px;">Balance (KAS)</th>
-                            <th style="padding: 10px;">Explorer</th>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Address</th>
+                            <th>Known Tag</th>
+                            <th>Balance (KAS)</th>
+                            <th>Explorer</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -134,7 +145,12 @@
 
     </main>
 
+    <footer>
+        <p>Built for the Community • Powered by Open Source • <a href="https://github.com/dnilgis/kaspai" target="_blank">View on GitHub</a></p>
+    </footer>
+
     <script>
+        // formatting helper
         const formatNumber = (num, currency = true) => {
             if (typeof num === 'string') return num; 
             if (num >= 1000000000) return (num / 1000000000).toFixed(2) + ' B';
@@ -145,24 +161,23 @@
 
         const loadData = async (fileName) => {
             try {
-                // Use timestamp to prevent caching old data
+                // cache-busting timestamp
                 const response = await fetch(`data/${fileName}?t=${new Date().getTime()}`);
                 if (!response.ok) throw new Error(`Failed to load ${fileName}`);
                 return response.json();
             } catch (error) {
-                console.error(error);
+                console.warn(error); // Warn instead of Error to keep console clean
                 return {};
             }
         };
 
         const updateDashboard = async () => {
-            // Load all data files
             const marketData = await loadData('market_data.json');
             const networkData = await loadData('network_data.json');
             const l2Data = await loadData('l2_data.json');
             const whaleData = await loadData('whale_data.json');
 
-            // --- Market Stats ---
+            // 1. UPDATE MARKET
             if (marketData.price_usd) {
                 document.getElementById('kas-price').textContent = `$${marketData.price_usd.toFixed(4)}`;
                 document.getElementById('kas-volume').textContent = formatNumber(marketData.volume_24h, false);
@@ -174,7 +189,7 @@
                 changeElement.className = marketData.price_change_24h >= 0 ? 'stat-detail up' : 'stat-detail down';
             }
 
-            // --- Network Stats ---
+            // 2. UPDATE NETWORK
             document.getElementById('daa-score').textContent = networkData.daa_score || '--';
             document.getElementById('current-supply').textContent = networkData.current_supply || '--';
             document.getElementById('real-time-tps').textContent = networkData.real_time_tps || '--';
@@ -184,41 +199,46 @@
             document.getElementById('next-reduction-days').textContent = networkData.next_reduction_days || '--';
             document.getElementById('max-tps-10s').textContent = networkData.max_tps_10s || '--';
             
-            // --- L2 Tracker ---
+            // 3. UPDATE KRC-20 LIST
             if (l2Data.projects) {
-                document.getElementById('total-tvl').textContent = `$${l2Data.total_tvl}`;
-                document.getElementById('total-volume-24h').textContent = `$${l2Data.total_volume_24h}`;
+                document.getElementById('total-tvl').textContent = l2Data.total_tvl; // Already formatted in Python
+                document.getElementById('total-volume-24h').textContent = l2Data.total_volume_24h;
                 document.getElementById('total-projects').textContent = l2Data.total_projects;
-                document.getElementById('networks-split').textContent = l2Data.networks_split;
 
                 const tableBody = document.querySelector('#l2-projects-table tbody');
                 tableBody.innerHTML = ''; 
                 l2Data.projects.forEach(p => {
                     const row = tableBody.insertRow();
-                    row.insertCell().textContent = p.name;
-                    row.insertCell().textContent = `$${p.tvl}`;
-                    row.insertCell().textContent = `$${p.volume_24h}`;
                     
-                    const categoriesCell = row.insertCell();
-                    p.category.split(',').forEach(cat => {
-                        const span = document.createElement('span');
-                        span.className = `category-tag tag-${cat.trim().toLowerCase().replace(',', '').replace(' ', '-')}`;
-                        span.textContent = cat.trim();
-                        categoriesCell.appendChild(span);
-                    });
+                    // Token Name & Symbol
+                    row.insertCell().innerHTML = `<strong>${p.name}</strong> <span style="font-size:0.8em; color:#666;">(${p.symbol || ''})</span>`;
+                    
+                    row.insertCell().textContent = formatNumber(p.tvl);
+                    row.insertCell().textContent = formatNumber(p.volume_24h);
+                    
+                    // Change
+                    const changeCell = row.insertCell();
+                    if (p.change_24h !== undefined) {
+                        changeCell.textContent = `${p.change_24h.toFixed(2)}%`;
+                        changeCell.className = p.change_24h >= 0 ? 'stat-detail up' : 'stat-detail down';
+                    } else {
+                        changeCell.textContent = '--';
+                    }
                     
                     row.insertCell().textContent = p.network;
+                    
+                    // Action Button
                     const actionCell = row.insertCell();
                     const link = document.createElement('a');
                     link.href = p.visit;
-                    link.textContent = 'Visit';
-                    link.className = 'action-link';
+                    link.innerHTML = 'View';
+                    link.className = 'btn-small';
                     link.target = '_blank';
                     actionCell.appendChild(link);
                 });
             }
 
-            // --- NEW: Whale Watch Logic ---
+            // 4. UPDATE WHALE LIST
             if (whaleData.whales) {
                 const whaleBody = document.querySelector('#whale-table tbody');
                 whaleBody.innerHTML = '';
@@ -229,57 +249,55 @@
                     // Rank
                     const rankCell = row.insertCell();
                     rankCell.textContent = `#${w.rank}`;
-                    rankCell.style.padding = '10px';
+                    rankCell.style.fontWeight = 'bold';
                     
-                    // Address (Truncated for clean look)
+                    // Address
                     const addrCell = row.insertCell();
-                    const shortAddr = w.address.substring(0, 12) + '...' + w.address.substring(w.address.length - 6);
-                    addrCell.textContent = shortAddr;
-                    addrCell.style.padding = '10px';
-                    addrCell.style.fontFamily = 'monospace';
+                    addrCell.innerHTML = `<span class="addr-text">${w.address}</span>`;
                     
-                    // Known Tag
+                    // Tag
                     const tagCell = row.insertCell();
-                    tagCell.style.padding = '10px';
                     if (w.name !== "Unknown Whale") {
-                        const tagSpan = document.createElement('span');
-                        tagSpan.className = 'category-tag tag-meme'; // Reusing the yellow tag style for visibility
-                        tagSpan.textContent = w.name;
-                        tagCell.appendChild(tagSpan);
+                        tagCell.innerHTML = `<span class="tag-whale">${w.name}</span>`;
                     } else {
-                        tagCell.textContent = '-';
+                        tagCell.innerHTML = `<span style="color:#ccc;">-</span>`;
                     }
                     
                     // Balance
                     const balCell = row.insertCell();
                     balCell.textContent = formatNumber(w.balance, false);
                     balCell.style.fontWeight = 'bold';
-                    balCell.style.padding = '10px';
                     
-                    // Explorer Link
+                    // Link
                     const linkCell = row.insertCell();
-                    linkCell.style.padding = '10px';
                     const link = document.createElement('a');
                     link.href = w.link;
-                    link.target = "_blank";
-                    link.textContent = "View";
+                    link.textContent = " Explorer ↗";
                     link.className = "action-link";
+                    link.target = "_blank";
                     linkCell.appendChild(link);
                 });
             }
         };
 
+        // Static Price Chart (Placeholder for visual appeal)
         const drawChart = () => {
-            // Placeholder chart - In the future, we can connect this to historical data
-            new Chart(document.getElementById('priceChart'), {
+            const ctx = document.getElementById('priceChart').getContext('2d');
+            
+            // Create Gradient
+            let gradient = ctx.createLinearGradient(0, 0, 0, 400);
+            gradient.addColorStop(0, 'rgba(0, 204, 204, 0.2)');
+            gradient.addColorStop(1, 'rgba(0, 204, 204, 0.0)');
+
+            new Chart(ctx, {
                 type: 'line',
                 data: {
-                    labels: ['4D ago', '3D ago', '2D ago', '1D ago', 'Now'],
+                    labels: ['4D', '3D', '2D', '1D', 'Now'],
                     datasets: [{
-                        label: 'Price Trend',
+                        label: 'Price',
                         data: [0.046, 0.048, 0.047, 0.050, 0.0476], 
                         borderColor: '#00CCCC',
-                        backgroundColor: 'rgba(0, 204, 204, 0.1)',
+                        backgroundColor: gradient,
                         borderWidth: 2,
                         tension: 0.4,
                         pointRadius: 0,
@@ -289,11 +307,8 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    scales: {
-                        x: { display: false },
-                        y: { display: false }
-                    },
-                    plugins: { legend: { display: false }, tooltip: { enabled: false } }
+                    plugins: { legend: { display: false } },
+                    scales: { x: { display: false }, y: { display: false } }
                 }
             });
         };
@@ -301,6 +316,7 @@
         window.onload = () => {
             updateDashboard();
             drawChart();
+            // Auto-refresh data every 5 minutes
             setInterval(updateDashboard, 300000); 
         };
     </script>
