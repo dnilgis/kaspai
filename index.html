@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KASLIVE OS v7.0 // FINAL INTERACTIVE UI</title>
+    <title>KASLIVE OS v6.0 // CLEANED & FINAL</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -87,7 +87,7 @@
             gap: var(--gap);
         }
 
-        .dag-inspector, .wallet-panel, .sonar-panel {
+        .dag-inspector, .wallet-panel, .sonar-panel { /* ALIGNED ALL HEIGHTS */
             height: 380px; 
             display: flex;
             flex-direction: column;
@@ -152,7 +152,7 @@
             width: 100%;
         }
 
-        /* --- METRICS GRID --- */
+        /* --- METRICS GRID FIXES --- */
         .metrics-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr); 
@@ -194,7 +194,7 @@
         }
         .gauge-value { font-size: 0.7rem; font-weight:bold; }
         
-        /* --- DAG INSPECTOR --- */
+        /* --- DAG INSPECTOR FIXES --- */
         .dag-status {
             display: flex;
             justify-content: space-around;
@@ -259,72 +259,19 @@
             padding: 4px 0;
         }
 
-        /* --- KRC TABLE & TOOLTIP STYLES --- */
+        /* --- KRC TABLE FIXES --- */
         table {
             font-size: 0.75rem; 
         }
         th, td {
             padding: 6px; 
         }
-        
-        .scan-cell {
-            position: relative; /* REQUIRED FOR TOOLTIP POSITIONING */
-        }
-
         .btn-scan {
-            background: transparent;
-            border: 1px solid var(--neon-cyan);
-            color: var(--neon-cyan);
             padding: 2px 6px;
             font-size: 0.65rem; 
-            cursor: pointer;
-            transition: 0.2s;
-            font-family: inherit;
-        }
-        .btn-scan:hover {
-            background: var(--neon-cyan);
-            color: #000;
-            box-shadow: 0 0 15px var(--neon-cyan);
         }
 
-        /* Tooltip Styles */
-        .tooltip {
-            visibility: hidden;
-            width: 150px;
-            background-color: var(--neon-purple);
-            color: var(--bg-deep);
-            text-align: center;
-            padding: 5px;
-            border-radius: 4px;
-            position: absolute;
-            z-index: 100;
-            bottom: 100%; /* Position above the cell */
-            left: 50%;
-            margin-left: -75px; /* Center the tooltip */
-            opacity: 0;
-            transition: opacity 0.3s, visibility 0.3s;
-            font-size: 0.65rem;
-            white-space: normal;
-        }
-
-        .tooltip::after {
-            content: "";
-            position: absolute;
-            top: 100%;
-            left: 50%;
-            margin-left: -5px;
-            border-width: 5px;
-            border-style: solid;
-            border-color: var(--neon-purple) transparent transparent transparent;
-        }
-
-        /* Show the tooltip when hovering over the cell */
-        .scan-cell:hover .tooltip {
-            visibility: visible;
-            opacity: 1;
-        }
-
-        /* --- WHALE SONAR --- */
+        /* --- WHALE SONAR FIXES --- */
         .sonar-container {
             height: 70px; 
             padding-bottom: 5px;
@@ -344,9 +291,13 @@
             padding: 3px 0;
         }
 
-        /* --- WALLET API & TX WATCH --- */
+        /* --- WALLET API & TX WATCH FIXES --- */
         .wallet-panel {
             gap: 8px;
+        }
+        .wallet-connect {
+            padding: 8px;
+            font-size: 0.75rem;
         }
         .alert-box {
             font-size: 0.65rem;
@@ -355,9 +306,6 @@
         .mining-status {
             font-size: 0.7rem;
             padding: 4px 0;
-        }
-        .tx-list {
-            position: relative;
         }
         .tx-item {
             font-size: 0.65rem; 
@@ -378,7 +326,7 @@
     <canvas id="rain-canvas"></canvas>
 
     <header>
-        <div class="logo">KASLIVE<span>_OS</span> v7.0</div>
+        <div class="logo">KASLIVE<span>_OS</span> v6.0</div>
         <nav>
             <a href="#">MARKET</a>
             <a href="#" class="active">DAG</a>
@@ -475,34 +423,13 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr><td>NACHO</td><td>4.46M</td><td>115.4K</td><td style="color: var(--danger)">-4.70%</td><td>2.1K</td><td class="scan-cell">
-                        <button class="btn-scan">SCAN</button>
-                        <span class="tooltip">Contract Address Deep Scan: View liquidity, source code, and audit status.</span>
-                    </td></tr>
-                    <tr><td>KASPY</td><td>1.07M</td><td>25.2K</td><td style="color: var(--success)">+2.65%</td><td>1.8K</td><td class="scan-cell">
-                        <button class="btn-scan">SCAN</button>
-                        <span class="tooltip">Contract Address Deep Scan: View liquidity, source code, and audit status.</span>
-                    </td></tr>
-                    <tr><td>KANGO</td><td>776.5K</td><td>107.8K</td><td style="color: var(--danger)">-2.10%</td><td>0.9K</td><td class="scan-cell">
-                        <button class="btn-scan">SCAN</button>
-                        <span class="tooltip">Contract Address Deep Scan: View liquidity, source code, and audit status.</span>
-                    </td></tr>
-                    <tr><td>ZEAL</td><td>719.6K</td><td>55.8K</td><td style="color: var(--danger)">-2.24%</td><td>1.1K</td><td class="scan-cell">
-                        <button class="btn-scan">SCAN</button>
-                        <span class="tooltip">Contract Address Deep Scan: View liquidity, source code, and audit status.</span>
-                    </td></tr>
-                    <tr><td>KASPER</td><td>473.3K</td><td>51.7K</td><td style="color: var(--danger)">-11.78%</td><td>0.5K</td><td class="scan-cell">
-                        <button class="btn-scan">SCAN</button>
-                        <span class="tooltip">Contract Address Deep Scan: View liquidity, source code, and audit status.</span>
-                    </td></tr>
-                    <tr><td>PWWAS</td><td>363.0K</td><td>45.7K</td><td style="color: var(--success)">+0.88%</td><td>0.7K</td><td class="scan-cell">
-                        <button class="btn-scan">SCAN</button>
-                        <span class="tooltip">Contract Address Deep Scan: View liquidity, source code, and audit status.</span>
-                    </td></tr>
-                    <tr><td>MINER</td><td>210.1K</td><td>22.1K</td><td style="color: var(--danger)">-1.55%</td><td>0.4K</td><td class="scan-cell">
-                        <button class="btn-scan">SCAN</button>
-                        <span class="tooltip">Contract Address Deep Scan: View liquidity, source code, and audit status.</span>
-                    </td></tr>
+                    <tr><td>NACHO</td><td>4.46M</td><td>115.4K</td><td style="color: var(--danger)">-4.70%</td><td>2.1K</td><td><button class="btn-scan">SCAN</button></td></tr>
+                    <tr><td>KASPY</td><td>1.07M</td><td>25.2K</td><td style="color: var(--success)">+2.65%</td><td>1.8K</td><td><button class="btn-scan">SCAN</button></td></tr>
+                    <tr><td>KANGO</td><td>776.5K</td><td>107.8K</td><td style="color: var(--danger)">-2.10%</td><td>0.9K</td><td><button class="btn-scan">SCAN</button></td></tr>
+                    <tr><td>ZEAL</td><td>719.6K</td><td>55.8K</td><td style="color: var(--danger)">-2.24%</td><td>1.1K</td><td><button class="btn-scan">SCAN</button></td></tr>
+                    <tr><td>KASPER</td><td>473.3K</td><td>51.7K</td><td style="color: var(--danger)">-11.78%</td><td>0.5K</td><td><button class="btn-scan">SCAN</button></td></tr>
+                    <tr><td>PWWAS</td><td>363.0K</td><td>45.7K</td><td style="color: var(--success)">+0.88%</td><td>0.7K</td><td><button class="btn-scan">SCAN</button></td></tr>
+                    <tr><td>MINER</td><td>210.1K</td><td>22.1K</td><td style="color: var(--danger)">-1.55%</td><td>0.4K</td><td><button class="btn-scan">SCAN</button></td></tr>
                 </tbody>
             </table>
         </div>
