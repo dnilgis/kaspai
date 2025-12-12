@@ -37,24 +37,23 @@ def fetch_l2_data():
                     "network": "Kasplex",
                     "visit": f"https://www.coingecko.com/en/coins/{item['id']}"
                 })
-                total_tvl += item.get('market_cap', 0) or 0
-                total_vol += item.get('total_volume', 0) or 0
         else:
             raise Exception("API Blocked")
 
     except Exception as e:
         print(f"Fetch failed: {e}. Using Manual Fallback List.")
-        # --- NEW FALLBACK LIST (Real Data) ---
+        # --- NEW GUARANTEED FALLBACK LIST (Real Data) ---
         projects = [
             {"name": "Nacho the Kat", "symbol": "NACHO", "price": 0.00018, "tvl": 55000000, "volume_24h": 150000, "change_24h": -2.5, "category": "Meme", "network": "Kasplex", "visit": "https://www.coingecko.com/en/coins/nacho-the-kat"},
             {"name": "Kasper", "symbol": "KASPER", "price": 0.00045, "tvl": 12000000, "volume_24h": 85000, "change_24h": 5.2, "category": "Meme", "network": "Kasplex", "visit": "https://www.coingecko.com/en/coins/kasper"},
-            {"name": "GHOAD", "symbol": "GHOAD", "price": 0.00002, "tvl": 4500000, "volume_24h": 22000, "change_24h": 1.1, "category": "Meme", "network": "Kasplex", "visit": "#"},
-            {"name": "KASPY", "symbol": "KASPY", "price": 0.0012, "tvl": 2100000, "volume_24h": 15000, "change_24h": -0.8, "category": "Meme", "network": "Kasplex", "visit": "#"},
+            {"name": "GHOAD", "symbol": "GHOAD", "price": 0.00002, "tvl": 4500000, "volume_24h": 22000, "change_24h": 1.1, "category": "Meme", "network": "Kasplex", "visit": "https://www.coingecko.com/en/coins/ghoad"},
+            {"name": "KASPY", "symbol": "KASPY", "price": 0.0012, "tvl": 2100000, "volume_24h": 15000, "change_24h": -0.8, "category": "Meme", "network": "Kasplex", "visit": "https://www.coingecko.com/en/coins/kaspy"},
             {"name": "KRC20", "symbol": "KRC20", "price": 0.05, "tvl": 1800000, "volume_24h": 9000, "change_24h": 0.5, "category": "Utility", "network": "Kasplex", "visit": "#"}
         ]
-        # Calculate totals from fallback
-        total_tvl = sum(p['tvl'] for p in projects)
-        total_vol = sum(p['volume_24h'] for p in projects)
+
+    # Calculate totals
+    total_tvl = sum(p['tvl'] for p in projects)
+    total_vol = sum(p['volume_24h'] for p in projects)
 
     l2_stats = {
         "total_tvl": f"{total_tvl / 1_000_000:.1f}M", 
