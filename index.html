@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KASLIVE v10.1 // A dnilgis Project</title>
+    <title>KASLIVE v11.0 // A dnilgis Project</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -20,7 +20,7 @@
             --accent-cyan: #00f0ff;
             --accent-green: #00ff88;
             --accent-red: #ff3366;
-            --accent-premium: gold; /* New Premium Accent */
+            --accent-premium: gold;
             --text-primary: #e5e7eb;
             --text-secondary: #9ca3af;
             --text-muted: #6b7280;
@@ -44,7 +44,7 @@
             color: var(--text-primary);
             overflow-x: hidden;
             line-height: 1.6;
-            padding-bottom: 4rem; /* Ensure space for fixed/sticky footer elements */
+            padding-bottom: 4rem;
         }
 
         /* Background Grid Effect */
@@ -137,10 +137,10 @@
             padding: 2rem;
         }
 
-        /* Hero Section */
+        /* Hero Section - Strict Grid */
         .hero {
             display: grid;
-            grid-template-columns: 2.5fr 1fr; /* Chart is wide */
+            grid-template-columns: 2.5fr 1fr;
             gap: var(--gap-main);
             margin-bottom: 3rem;
             animation: fadeIn 0.8s ease 0.2s backwards;
@@ -189,6 +189,11 @@
             background: var(--accent-green);
             box-shadow: 0 0 10px var(--accent-green);
             animation: pulse 2s ease infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
         }
 
         /* Metric Grid */
@@ -503,10 +508,10 @@
             cursor: pointer;
         }
         
-        /* Wallet and Mining Section */
+        /* Utility Grid */
         .utility-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr 1fr; /* Added a third column */
+            grid-template-columns: 1fr 1fr 1fr;
             gap: var(--gap-main);
             margin-bottom: 3rem;
         }
@@ -527,7 +532,7 @@
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
             font-family: 'JetBrains Mono', monospace;
         }
-
+        
         /* Mining Calculator specific styles */
         .mining-calc input {
             width: 100%;
@@ -620,7 +625,7 @@
 <body>
     <header>
         <div class="header-content">
-            <div class="logo">KAS<span style="color: var(--accent-green);">LIVE</span> v10.1</div>
+            <div class="logo">KAS<span style="color: var(--accent-green);">LIVE</span> v11.0</div>
             <nav class="nav">
                 <a href="#whale" class="nav-link">WHALE_WATCH</a>
                 <a href="#krc20" class="nav-link">KRC-20</a>
@@ -753,7 +758,7 @@
                     WHALE ALERT FEED
                     <span class="premium-badge">PREM</span>
                 </h3>
-                <div class="tx-feed" id="tx-feed" style="max-height: 100%; flex-grow: 1; padding: 0;">
+                <div class="tx-feed" id="tx-feed" style="max-height: 100%; flex-grow: 1; padding: 0; background: none; border: none; overflow-y: auto; ">
                     </div>
             </div>
         </section>
@@ -824,7 +829,7 @@
                 <a href="#" class="footer-link">GITHUB</a>
             </div>
             <div class="footer-credit">
-                KASLIVE v10.1 // A <a href="mailto:dnilgis@gmail.com" style="color: var(--accent-cyan); text-decoration: none;">dnilgis Project</a>
+                KASLIVE v11.0 // A <a href="mailto:dnilgis@gmail.com" style="color: var(--accent-cyan); text-decoration: none;">dnilgis Project</a>
             </div>
             <div style="margin-top: 0.5rem; font-size: 0.75rem;">Built for Kaspa Believers</div>
         </div>
