@@ -6,8 +6,7 @@ import os
 TOP_ADDRESSES_API = "https://api.kaspa.org/addresses/top"
 
 def fetch_whale_data():
-    # 1. DEFINE GUARANTEED FALLBACK DATA FIRST
-    # If API fails, this list is saved. It will never be empty.
+    # 1. GUARANTEED DATA (This will show if API fails)
     whales = [
         {"rank": 1, "address": "kaspa:precqv0krj3r6uyyfa36ga7s0u9jct0v4wg8ctsfde2gkrsgwgw8jgxfzfc98", "balance": 1254000000, "name": "Kaspa Dev Fund", "link": "https://explorer.kaspa.org/addresses/kaspa:precqv0krj3r6uyyfa36ga7s0u9jct0v4wg8ctsfde2gkrsgwgw8jgxfzfc98"},
         {"rank": 2, "address": "kaspa:qrhlh8g7p2y6r5488k65q64049p5z989354k488664", "balance": 350000000, "name": "Exchange (MEXC)", "link": "https://explorer.kaspa.org/addresses/kaspa:qrhlh8g7p2y6r5488k65q64049p5z989354k488664"},
@@ -16,7 +15,7 @@ def fetch_whale_data():
         {"rank": 5, "address": "kaspa:qq9837459823745982374598237459827345928", "balance": 120000000, "name": "Whale #5", "link": "#"}
     ]
     
-    # 2. Try to fetch Real Data (with timeout and headers)
+    # 2. Try to fetch Real Data
     try:
         headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/91.0.4472.124 Safari/537.36'}
         response = requests.get(TOP_ADDRESSES_API, headers=headers, timeout=5)
@@ -44,14 +43,14 @@ def fetch_whale_data():
                     "link": f"https://explorer.kaspa.org/addresses/{addr}"
                 })
             
-            # If we successfully parsed data, overwrite the fallback
+            # If successful, overwrite the fallback
             if len(real_whales) > 0:
                 whales = real_whales
                 
     except Exception as e:
         print(f"Whale API failed: {e}. Saving Fallback data instead.")
 
-    # 3. ALWAYS SAVE (This guarantees the file is created)
+    # 3. Save Data
     os.makedirs('data', exist_ok=True)
     with open('data/whale_data.json', 'w') as f:
         json.dump({"whales": whales}, f, indent=4)
