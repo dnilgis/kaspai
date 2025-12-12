@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KASLIVE OS v6.0 // CLEANED & FINAL</title>
+    <title>KASLIVE OS v8.0 // FINAL STRUCTURE</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -27,6 +27,7 @@
             /* --- DIMENSIONS --- */
             --header-height: 50px;
             --gap: 12px;
+            --chart-height: 380px; /* FIXED HEIGHT FOR ROW 1 */
         }
 
         * {
@@ -75,7 +76,7 @@
             opacity: 0.6;
         }
 
-        /* --- LAYOUT UTILS --- */
+        /* --- LAYOUT UTILS (NEW 2-ROW GRID) --- */
         .container {
             position: relative;
             z-index: 10;
@@ -87,11 +88,32 @@
             gap: var(--gap);
         }
 
-        .dag-inspector, .wallet-panel, .sonar-panel { /* ALIGNED ALL HEIGHTS */
-            height: 380px; 
+        /* STACKED PANEL CONTAINERS */
+        .left-stack {
             display: flex;
             flex-direction: column;
+            gap: var(--gap);
+            height: 100%;
         }
+        .right-stack {
+            display: flex;
+            flex-direction: column;
+            gap: var(--gap);
+            height: 100%;
+        }
+
+        /* Panel heights dictated by main elements */
+        .chart-panel, .network-panel { height: var(--chart-height); }
+        .krc-terminal-panel { flex-grow: 1; display: flex; flex-direction: column; }
+        .dag-inspector-panel { flex-grow: 1; display: flex; flex-direction: column; }
+        
+        /* Set flexible heights for the two bottom panels in the left column */
+        .krc-terminal-panel { height: calc(50% - (var(--gap) / 2)); }
+        .dag-inspector-panel { height: calc(50% - (var(--gap) / 2)); }
+
+        /* Set flexible heights for the three bottom panels in the right column */
+        .whale-sonar-panel { height: calc(40% - (var(--gap) * 2 / 3)); }
+        .wallet-panel { height: calc(60% - (var(--gap) * 1 / 3)); }
         
         /* --- HEADER --- */
         header {
@@ -145,14 +167,13 @@
             font-size: 0.65rem; 
         }
 
-
         /* --- CHART SECTION --- */
         .chart-container {
-            height: 380px;
+            height: calc(var(--chart-height) - 12px - 12px - 8px - 6px); /* Panel height minus paddings/margins/headers */
             width: 100%;
         }
 
-        /* --- METRICS GRID FIXES --- */
+        /* --- METRICS GRID (CLEANED UP) --- */
         .metrics-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr); 
@@ -180,7 +201,6 @@
             font-weight: bold;
             color: #fff;
         }
-        /* CIRCLE GAUGE (BPS) */
         .gauge {
             width: 35px; height: 35px; 
             border-radius: 50%;
@@ -194,7 +214,7 @@
         }
         .gauge-value { font-size: 0.7rem; font-weight:bold; }
         
-        /* --- DAG INSPECTOR FIXES --- */
+        /* --- DAG INSPECTOR --- */
         .dag-status {
             display: flex;
             justify-content: space-around;
@@ -213,8 +233,16 @@
             grid-template-columns: 2fr 1fr; 
             gap: 10px; 
         }
+        .tangle-viz {
+            border: 1px dashed rgba(255,255,255,0.1);
+            padding: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            position: relative;
+        }
         .tangle-viz h4 { font-size: 0.75rem; }
-
         .block-stream {
             width: 95%;
             height: 80%;
@@ -223,7 +251,6 @@
             border: 1px solid rgba(255,255,255,0.1);
             margin-top: 5px;
         }
-
         .block-lane {
             display: flex;
             height: 33.3%;
@@ -231,7 +258,6 @@
             align-items: center;
             white-space: nowrap;
         }
-
         .block-unit {
             display: inline-block;
             width: 12px; 
@@ -241,7 +267,6 @@
             transition: background-color 0.5s;
             animation: flow 4s linear infinite;
         }
-
         .block-unit.unconfirmed { background-color: var(--neon-cyan); box-shadow: 0 0 5px var(--neon-cyan); }
         .block-unit.confirmed { background-color: var(--neon-purple); box-shadow: 0 0 5px var(--neon-purple); }
 
@@ -259,19 +284,73 @@
             padding: 4px 0;
         }
 
-        /* --- KRC TABLE FIXES --- */
+        /* --- KRC TABLE & TOOLTIP STYLES --- */
         table {
+            width: 100%;
+            border-collapse: collapse;
             font-size: 0.75rem; 
         }
         th, td {
             padding: 6px; 
         }
-        .btn-scan {
-            padding: 2px 6px;
-            font-size: 0.65rem; 
+        
+        .scan-cell {
+            position: relative; 
         }
 
-        /* --- WHALE SONAR FIXES --- */
+        .btn-scan {
+            background: transparent;
+            border: 1px solid var(--neon-cyan);
+            color: var(--neon-cyan);
+            padding: 2px 6px;
+            font-size: 0.65rem; 
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+        }
+        .btn-scan:hover {
+            background: var(--neon-cyan);
+            color: #000;
+            box-shadow: 0 0 15px var(--neon-cyan);
+        }
+
+        /* Tooltip Styles */
+        .tooltip {
+            visibility: hidden;
+            width: 150px;
+            background-color: var(--neon-purple);
+            color: var(--bg-deep);
+            text-align: center;
+            padding: 5px;
+            border-radius: 4px;
+            position: absolute;
+            z-index: 100;
+            bottom: 100%; 
+            left: 50%;
+            margin-left: -75px; 
+            opacity: 0;
+            transition: opacity 0.3s, visibility 0.3s;
+            font-size: 0.65rem;
+            white-space: normal;
+        }
+
+        .tooltip::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: var(--neon-purple) transparent transparent transparent;
+        }
+
+        .scan-cell:hover .tooltip {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        /* --- WHALE SONAR --- */
         .sonar-container {
             height: 70px; 
             padding-bottom: 5px;
@@ -291,13 +370,9 @@
             padding: 3px 0;
         }
 
-        /* --- WALLET API & TX WATCH FIXES --- */
+        /* --- WALLET API & TX WATCH --- */
         .wallet-panel {
             gap: 8px;
-        }
-        .wallet-connect {
-            padding: 8px;
-            font-size: 0.75rem;
         }
         .alert-box {
             font-size: 0.65rem;
@@ -307,9 +382,25 @@
             font-size: 0.7rem;
             padding: 4px 0;
         }
+        .tx-list {
+            position: relative;
+            flex-grow: 1;
+            overflow: hidden; 
+            border: 1px solid rgba(255,255,255,0.05);
+            padding: 5px;
+        }
         .tx-item {
             font-size: 0.65rem; 
             padding: 3px 0;
+        }
+        .tx-scroller {
+            position: absolute;
+            width: 100%;
+            animation: scroll-tx 20s linear infinite;
+        }
+        @keyframes scroll-tx {
+            0% { transform: translateY(0%); }
+            100% { transform: translateY(-50%); } 
         }
         
         /* --- FOOTER --- */
@@ -326,7 +417,7 @@
     <canvas id="rain-canvas"></canvas>
 
     <header>
-        <div class="logo">KASLIVE<span>_OS</span> v6.0</div>
+        <div class="logo">KASLIVE<span>_OS</span> v8.0</div>
         <nav>
             <a href="#">MARKET</a>
             <a href="#" class="active">DAG</a>
@@ -340,216 +431,246 @@
 
     <div class="container">
         
-        <div class="panel">
-            <div class="panel-header">
-                <span class="panel-title">Market Overview // KAS-USDT</span>
-                <div>
-                    <button class="btn-scan">1H</button>
-                    <button class="btn-scan">4H</button>
-                    <button class="btn-scan">1D</button>
+        <div>
+            <div class="panel chart-panel">
+                <div class="panel-header">
+                    <span class="panel-title">Market Overview // KAS-USDT</span>
+                    <div>
+                        <button class="btn-scan">1H</button>
+                        <button class="btn-scan">4H</button>
+                        <button class="btn-scan">1D</button>
+                    </div>
                 </div>
-            </div>
-            <div class="chart-container" id="tradingview_widget"></div>
-        </div>
-
-        <div class="panel dag-inspector">
-            <div class="panel-header">
-                <span class="panel-title">DAG BLOCK INSPECTOR</span>
-                <span style="color: var(--neon-purple)">Tangle Flow & Speed Analysis</span>
-            </div>
-            <div class="dag-status">
-                <div><span>Tip Hash</span><span>0x4f...c1d</span></div>
-                <div><span>Orphan/Stale Rate</span><span class="low-danger">0.05%</span></div>
-                <div><span>In-Flight TXs</span><span class="success-value">1,452</span></div>
-                <div><span>Blocks/Sec (Target)</span><span class="success-value">1.0 B/S</span></div>
+                <div class="chart-container" id="tradingview_widget"></div>
             </div>
 
-            <div class="dag-viz-grid">
-                <div class="tangle-viz">
-                    <h4>BLOCK TANGLE FLOW (1 B/S)</h4>
-                    <div class="block-stream">
-                        <div class="block-lane">
-                            <span class="block-unit confirmed"></span>
-                            <span class="block-unit unconfirmed"></span>
-                            <span class="block-unit confirmed"></span>
-                            <span class="block-unit unconfirmed"></span>
-                            <span class="block-unit confirmed"></span>
-                            <span class="block-unit unconfirmed"></span>
-                            <span class="block-unit confirmed"></span>
+            <div class="left-stack" style="margin-top: var(--gap);">
+                
+                <div class="panel krc-terminal-panel">
+                    <div class="panel-header">
+                        <span class="panel-title">KRC-20 TERMINAL // TOP ASSETS</span>
+                        <span style="color: var(--neon-purple)">Scanning...</span>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Asset</th>
+                                <th>TVL</th>
+                                <th>Vol 24h</th>
+                                <th>Chg</th>
+                                <th>LPs</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>NACHO</td><td>4.46M</td><td>115.4K</td><td style="color: var(--danger)">-4.70%</td><td>2.1K</td><td class="scan-cell">
+                                <button class="btn-scan">SCAN</button>
+                                <span class="tooltip">Contract Address Deep Scan: View liquidity, source code, and audit status.</span>
+                            </td></tr>
+                            <tr><td>KASPY</td><td>1.07M</td><td>25.2K</td><td style="color: var(--success)">+2.65%</td><td>1.8K</td><td class="scan-cell">
+                                <button class="btn-scan">SCAN</button>
+                                <span class="tooltip">Contract Address Deep Scan: View liquidity, source code, and audit status.</span>
+                            </td></tr>
+                            <tr><td>KANGO</td><td>776.5K</td><td>107.8K</td><td style="color: var(--danger)">-2.10%</td><td>0.9K</td><td class="scan-cell">
+                                <button class="btn-scan">SCAN</button>
+                                <span class="tooltip">Contract Address Deep Scan: View liquidity, source code, and audit status.</span>
+                            </td></tr>
+                            <tr><td>ZEAL</td><td>719.6K</td><td>55.8K</td><td style="color: var(--danger)">-2.24%</td><td>1.1K</td><td class="scan-cell">
+                                <button class="btn-scan">SCAN</button>
+                                <span class="tooltip">Contract Address Deep Scan: View liquidity, source code, and audit status.</span>
+                            </td></tr>
+                            <tr><td>KASPER</td><td>473.3K</td><td>51.7K</td><td style="color: var(--danger)">-11.78%</td><td>0.5K</td><td class="scan-cell">
+                                <button class="btn-scan">SCAN</button>
+                                <span class="tooltip">Contract Address Deep Scan: View liquidity, source code, and audit status.</span>
+                            </td></tr>
+                            <tr><td>PWWAS</td><td>363.0K</td><td>45.7K</td><td style="color: var(--success)">+0.88%</td><td>0.7K</td><td class="scan-cell">
+                                <button class="btn-scan">SCAN</button>
+                                <span class="tooltip">Contract Address Deep Scan: View liquidity, source code, and audit status.</span>
+                            </td></tr>
+                            <tr><td>MINER</td><td>210.1K</td><td>22.1K</td><td style="color: var(--danger)">-1.55%</td><td>0.4K</td><td class="scan-cell">
+                                <button class="btn-scan">SCAN</button>
+                                <span class="tooltip">Contract Address Deep Scan: View liquidity, source code, and audit status.</span>
+                            </td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="panel dag-inspector-panel">
+                    <div class="panel-header">
+                        <span class="panel-title">DAG BLOCK INSPECTOR</span>
+                        <span style="color: var(--neon-purple)">Tangle Flow & Speed Analysis</span>
+                    </div>
+                    <div class="dag-status">
+                        <div><span>Tip Hash</span><span>0x4f...c1d</span></div>
+                        <div><span>Orphan/Stale Rate</span><span class="low-danger">0.05%</span></div>
+                        <div><span>In-Flight TXs</span><span class="success-value">1,452</span></div>
+                        <div><span>Blocks/Sec (Target)</span><span class="success-value">1.0 B/S</span></div>
+                    </div>
+
+                    <div class="dag-viz-grid">
+                        <div class="tangle-viz">
+                            <h4>BLOCK TANGLE FLOW (1 B/S)</h4>
+                            <div class="block-stream">
+                                <div class="block-lane">
+                                    <span class="block-unit confirmed"></span>
+                                    <span class="block-unit unconfirmed"></span>
+                                    <span class="block-unit confirmed"></span>
+                                    <span class="block-unit unconfirmed"></span>
+                                    <span class="block-unit confirmed"></span>
+                                    <span class="block-unit unconfirmed"></span>
+                                    <span class="block-unit confirmed"></span>
+                                </div>
+                                <div class="block-lane">
+                                    <span class="block-unit unconfirmed" style="animation-delay: -1.5s;"></span>
+                                    <span class="block-unit confirmed" style="animation-delay: -3s;"></span>
+                                    <span class="block-unit unconfirmed" style="animation-delay: -0.5s;"></span>
+                                    <span class="block-unit confirmed" style="animation-delay: -2s;"></span>
+                                    <span class="block-unit unconfirmed" style="animation-delay: -4s;"></span>
+                                </div>
+                                <div class="block-lane" style="border-bottom: none;">
+                                    <span class="block-unit confirmed" style="animation-delay: -2.5s;"></span>
+                                    <span class="block-unit confirmed" style="animation-delay: -1s;"></span>
+                                    <span class="block-unit unconfirmed" style="animation-delay: -3.5s;"></span>
+                                    <span class="block-unit confirmed" style="animation-delay: -0.2s;"></span>
+                                    <span class="block-unit unconfirmed" style="animation-delay: -1.8s;"></span>
+                                </div>
+                            </div>
+                            <p style="font-size:0.65rem; color: var(--text-muted); margin-top: 5px;">(Green = Created / Purple = Confirmed)</p>
                         </div>
-                        <div class="block-lane">
-                            <span class="block-unit unconfirmed" style="animation-delay: -1.5s;"></span>
-                            <span class="block-unit confirmed" style="animation-delay: -3s;"></span>
-                            <span class="block-unit unconfirmed" style="animation-delay: -0.5s;"></span>
-                            <span class="block-unit confirmed" style="animation-delay: -2s;"></span>
-                            <span class="block-unit unconfirmed" style="animation-delay: -4s;"></span>
-                        </div>
-                        <div class="block-lane" style="border-bottom: none;">
-                            <span class="block-unit confirmed" style="animation-delay: -2.5s;"></span>
-                            <span class="block-unit confirmed" style="animation-delay: -1s;"></span>
-                            <span class="block-unit unconfirmed" style="animation-delay: -3.5s;"></span>
-                            <span class="block-unit confirmed" style="animation-delay: -0.2s;"></span>
-                            <span class="block-unit unconfirmed" style="animation-delay: -1.8s;"></span>
+
+                        <div class="speed-analyzer">
+                            <h4>SPEED & LATENCY ANALYZER</h4>
+                            <div class="speed-data-point"><span>Avg Block Time</span><span>980 ms</span></div>
+                            <div class="speed-data-point"><span>Block Inclusion Latency</span><span>3.2 s</span></div>
+                            <div class="speed-data-point"><span>Network Latency (Avg)</span><span>150 ms</span></div>
+                            <div class="speed-data-point"><span>Max Block Jitter</span><span>120 ms</span></div>
+                            <div class="speed-data-point"><span>Median Confirmation Depth</span><span>10 Blocks</span></div>
                         </div>
                     </div>
-                    <p style="font-size:0.65rem; color: var(--text-muted); margin-top: 5px;">(Green = Created / Purple = Confirmed)</p>
-                </div>
-
-                <div class="speed-analyzer">
-                    <h4>SPEED & LATENCY ANALYZER</h4>
-                    <div class="speed-data-point"><span>Avg Block Time</span><span>980 ms</span></div>
-                    <div class="speed-data-point"><span>Block Inclusion Latency</span><span>3.2 s</span></div>
-                    <div class="speed-data-point"><span>Network Latency (Avg)</span><span>150 ms</span></div>
-                    <div class="speed-data-point"><span>Max Block Jitter</span><span>120 ms</span></div>
-                    <div class="speed-data-point"><span>Median Confirmation Depth</span><span>10 Blocks</span></div>
                 </div>
             </div>
         </div>
 
-        <div class="panel">
-            <div class="panel-header">
-                <span class="panel-title">KRC-20 TERMINAL // TOP ASSETS</span>
-                <span style="color: var(--neon-purple)">Scanning...</span>
-            </div>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Asset</th>
-                        <th>TVL</th>
-                        <th>Vol 24h</th>
-                        <th>Chg</th>
-                        <th>LPs</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr><td>NACHO</td><td>4.46M</td><td>115.4K</td><td style="color: var(--danger)">-4.70%</td><td>2.1K</td><td><button class="btn-scan">SCAN</button></td></tr>
-                    <tr><td>KASPY</td><td>1.07M</td><td>25.2K</td><td style="color: var(--success)">+2.65%</td><td>1.8K</td><td><button class="btn-scan">SCAN</button></td></tr>
-                    <tr><td>KANGO</td><td>776.5K</td><td>107.8K</td><td style="color: var(--danger)">-2.10%</td><td>0.9K</td><td><button class="btn-scan">SCAN</button></td></tr>
-                    <tr><td>ZEAL</td><td>719.6K</td><td>55.8K</td><td style="color: var(--danger)">-2.24%</td><td>1.1K</td><td><button class="btn-scan">SCAN</button></td></tr>
-                    <tr><td>KASPER</td><td>473.3K</td><td>51.7K</td><td style="color: var(--danger)">-11.78%</td><td>0.5K</td><td><button class="btn-scan">SCAN</button></td></tr>
-                    <tr><td>PWWAS</td><td>363.0K</td><td>45.7K</td><td style="color: var(--success)">+0.88%</td><td>0.7K</td><td><button class="btn-scan">SCAN</button></td></tr>
-                    <tr><td>MINER</td><td>210.1K</td><td>22.1K</td><td style="color: var(--danger)">-1.55%</td><td>0.4K</td><td><button class="btn-scan">SCAN</button></td></tr>
-                </tbody>
-            </table>
-        </div>
-
-
-        <div class="panel">
-            <div class="panel-header">
-                <span class="panel-title">NETWORK METRICS</span>
-                <span style="color: var(--success)">● OPERATIONAL</span>
-            </div>
-            <div class="metrics-grid">
-                <div class="metric-box">
-                    <div class="gauge"><span class="gauge-value">1.0</span></div>
-                    <span class="metric-label">BPS</span>
+        <div>
+            <div class="panel network-panel">
+                <div class="panel-header">
+                    <span class="panel-title">NETWORK METRICS</span>
+                    <span style="color: var(--success)">● OPERATIONAL</span>
                 </div>
-                <div class="metric-box">
-                    <span class="metric-value cyan">945.00</span>
-                    <span class="metric-label">PH/s</span>
+                <div class="metrics-grid">
+                    <div class="metric-box">
+                        <div class="gauge"><span class="gauge-value">1.0</span></div>
+                        <span class="metric-label">BPS</span>
+                    </div>
+                    <div class="metric-box">
+                        <span class="metric-value cyan">945.00</span>
+                        <span class="metric-label">PH/s</span>
+                    </div>
+                    <div class="metric-box">
+                        <span class="metric-value">27.10 B</span>
+                        <span class="metric-label">Supply</span>
+                    </div>
+                    <div class="metric-box">
+                        <span class="metric-value purple">18</span>
+                        <span class="metric-label">Days to Drop</span>
+                    </div>
+                    <div class="metric-box">
+                        <span class="metric-value">4.5M</span>
+                        <span class="metric-label">Block Count</span>
+                    </div>
+                    <div class="metric-box">
+                        <span class="metric-value danger">0.05%</span>
+                        <span class="metric-label">Orphan Rate</span>
+                    </div>
+                    <div class="metric-box">
+                        <span class="metric-value success">98%</span>
+                        <span class="metric-label">Sync Status</span>
+                    </div>
+                    <div class="metric-box">
+                        <span class="metric-value">620</span>
+                        <span class="metric-label">Nodes Active</span>
+                    </div>
+                    <div class="metric-box">
+                        <span class="metric-value cyan">3.2k</span>
+                        <span class="metric-label">TXs/Min</span>
+                    </div>
                 </div>
-                <div class="metric-box">
-                    <span class="metric-value">27.10 B</span>
-                    <span class="metric-label">Supply</span>
-                </div>
-                <div class="metric-box">
-                    <span class="metric-value purple">18</span>
-                    <span class="metric-label">Days to Drop</span>
-                </div>
-                <div class="metric-box">
-                    <span class="metric-value">4.5M</span>
-                    <span class="metric-label">Block Count</span>
-                </div>
-                <div class="metric-box">
-                    <span class="metric-value danger">0.05%</span>
-                    <span class="metric-label">Orphan Rate</span>
-                </div>
-                <div class="metric-box">
-                    <span class="metric-value success">98%</span>
-                    <span class="metric-label">Sync Status</span>
-                </div>
-                <div class="metric-box">
-                    <span class="metric-value">620</span>
-                    <span class="metric-label">Nodes Active</span>
-                </div>
-                <div class="metric-box">
-                    <span class="metric-value cyan">3.2k</span>
-                    <span class="metric-label">TXs/Min</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="panel sonar-panel">
-            <div class="panel-header">
-                <span class="panel-title">WHALE SONAR (TOP 5)</span>
-            </div>
-            
-            <div class="sonar-container">
-                <div class="orb rank-1"><span>#1</span></div>
-                <div class="orb rank-2"><span>#2</span></div>
-                <div class="orb rank-3"><span>#3</span></div>
             </div>
 
-            <div class="whale-list">
-                <div class="whale-row">
-                    <span style="color:var(--neon-purple)">#1 Dev Fund</span>
-                    <span>1.25 B</span>
-                </div>
-                <div class="whale-row">
-                    <span style="color:var(--neon-cyan)">#2 MEXC</span>
-                    <span>350.00 M</span>
-                </div>
-                <div class="whale-row">
-                    <span>#3 Whale</span>
-                    <span>210.00 M</span>
-                </div>
-            </div>
-        </div>
+            <div class="right-stack" style="margin-top: var(--gap);">
+                
+                <div class="panel whale-sonar-panel">
+                    <div class="panel-header">
+                        <span class="panel-title">WHALE SONAR (TOP 5)</span>
+                    </div>
+                    
+                    <div class="sonar-container">
+                        <div class="orb rank-1"><span>#1</span></div>
+                        <div class="orb rank-2"><span>#2</span></div>
+                        <div class="orb rank-3"><span>#3</span></div>
+                    </div>
 
-        <div class="panel wallet-panel">
-            <div class="panel-header">
-                <span class="panel-title">WALLET API & TX WATCH</span>
-                <span style="color: var(--neon-cyan)">Live Stream</span>
-            </div>
-            
-            <div class="alert-box">
-                <p>🚨 **Active Session Alert:** Kaspa Wallet Connected (0xfa3...b7c)</p>
-            </div>
+                    <div class="whale-list">
+                        <div class="whale-row">
+                            <span style="color:var(--neon-purple)">#1 Dev Fund</span>
+                            <span>1.25 B</span>
+                        </div>
+                        <div class="whale-row">
+                            <span style="color:var(--neon-cyan)">#2 MEXC</span>
+                            <span>350.00 M</span>
+                        </div>
+                        <div class="whale-row">
+                            <span>#3 Whale</span>
+                            <span>210.00 M</span>
+                        </div>
+                    </div>
+                </div>
 
-            <div class="mining-status">
-                <span>P.O.W. Status:</span>
-                <span style="color: var(--success)">Active @ 12.5 GH/s</span>
-            </div>
+                <div class="panel wallet-panel">
+                    <div class="panel-header">
+                        <span class="panel-title">WALLET API & TX WATCH</span>
+                        <span style="color: var(--neon-cyan)">Live Stream</span>
+                    </div>
+                    
+                    <div class="alert-box">
+                        <p>🚨 **Active Session Alert:** Kaspa Wallet Connected (0xfa3...b7c)</p>
+                    </div>
 
-            <div class="tx-list">
-                <div class="tx-scroller">
-                    <div class="tx-item"><span>0x2a...f9c (Rec)</span><span class="tx-amount">+ 1,200 KAS</span></div>
-                    <div class="tx-item"><span>0x7d...a11 (Sent)</span><span style="color: var(--danger)">- 80 KAS</span></div>
-                    <div class="tx-item"><span>0x1c...e3b (Rec)</span><span class="tx-amount">+ 50,000 KAS</span></div>
-                    <div class="tx-item"><span>0x8f...2g4 (Sent)</span><span style="color: var(--danger)">- 15,000 KAS</span></div>
-                    <div class="tx-item"><span>0x2a...f9c (Rec)</span><span class="tx-amount">+ 1,200 KAS</span></div>
-                    <div class="tx-item"><span>0x7d...a11 (Sent)</span><span style="color: var(--danger)">- 80 KAS</span></div>
-                    <div class="tx-item"><span>0x1c...e3b (Rec)</span><span class="tx-amount">+ 50,000 KAS</span></div>
-                    <div class="tx-item"><span>0x8f...2g4 (Sent)</span><span style="color: var(--danger)">- 15,000 KAS</span></div>
-                    <div class="tx-item"><span>0x2a...f9c (Rec)</span><span class="tx-amount">+ 1,200 KAS</span></div>
-                    <div class="tx-item"><span>0x7d...a11 (Sent)</span><span style="color: var(--danger)">- 80 KAS</span></div>
-                    <div class="tx-item"><span>0x1c...e3b (Rec)</span><span class="tx-amount">+ 50,000 KAS</span></div>
-                    <div class="tx-item"><span>0x8f...2g4 (Sent)</span><span style="color: var(--danger)">- 15,000 KAS</span></div>
-                    <div class="tx-item"><span>0x7d...a11 (Sent)</span><span style="color: var(--danger)">- 80 KAS</span></div>
-                    <div class="tx-item"><span>0x2a...f9c (Rec)</span><span class="tx-amount">+ 1,200 KAS</span></div>
-                    <div class="tx-item"><span>0x7d...a11 (Sent)</span><span style="color: var(--danger)">- 80 KAS</span></div>
-                    <div class="tx-item"><span>0x1c...e3b (Rec)</span><span class="tx-amount">+ 50,000 KAS</span></div>
-                    <div class="tx-item"><span>0x8f...2g4 (Sent)</span><span style="color: var(--danger)">- 15,000 KAS</span></div>
-                    <div class="tx-item"><span>0x2a...f9c (Rec)</span><span class="tx-amount">+ 1,200 KAS</span></div>
-                    <div class="tx-item"><span>0x7d...a11 (Sent)</span><span style="color: var(--danger)">- 80 KAS</span></div>
-                    <div class="tx-item"><span>0x1c...e3b (Rec)</span><span class="tx-amount">+ 50,000 KAS</span></div>
-                    <div class="tx-item"><span>0x8f...2g4 (Sent)</span><span style="color: var(--danger)">- 15,000 KAS</span></div>
-                    <div class="tx-item"><span>0x2a...f9c (Rec)</span><span class="tx-amount">+ 1,200 KAS</span></div>
-                    <div class="tx-item"><span>0x7d...a11 (Sent)</span><span style="color: var(--danger)">- 80 KAS</span></div>
-                    <div class="tx-item"><span>0x1c...e3b (Rec)</span><span class="tx-amount">+ 50,000 KAS</span></div>
-                    <div class="tx-item"><span>0x8f...2g4 (Sent)</span><span style="color: var(--danger)">- 15,000 KAS</span></div>
-                    <div class="tx-item"><span>0x7d...a11 (Sent)</span><span style="color: var(--danger)">- 80 KAS</span></div>
+                    <div class="mining-status">
+                        <span>P.O.W. Status:</span>
+                        <span style="color: var(--success)">Active @ 12.5 GH/s</span>
+                    </div>
+
+                    <div class="tx-list">
+                        <div class="tx-scroller">
+                            <div class="tx-item"><span>0x2a...f9c (Rec)</span><span class="tx-amount">+ 1,200 KAS</span></div>
+                            <div class="tx-item"><span>0x7d...a11 (Sent)</span><span style="color: var(--danger)">- 80 KAS</span></div>
+                            <div class="tx-item"><span>0x1c...e3b (Rec)</span><span class="tx-amount">+ 50,000 KAS</span></div>
+                            <div class="tx-item"><span>0x8f...2g4 (Sent)</span><span style="color: var(--danger)">- 15,000 KAS</span></div>
+                            <div class="tx-item"><span>0x2a...f9c (Rec)</span><span class="tx-amount">+ 1,200 KAS</span></div>
+                            <div class="tx-item"><span>0x7d...a11 (Sent)</span><span style="color: var(--danger)">- 80 KAS</span></div>
+                            <div class="tx-item"><span>0x1c...e3b (Rec)</span><span class="tx-amount">+ 50,000 KAS</span></div>
+                            <div class="tx-item"><span>0x8f...2g4 (Sent)</span><span style="color: var(--danger)">- 15,000 KAS</span></div>
+                            <div class="tx-item"><span>0x2a...f9c (Rec)</span><span class="tx-amount">+ 1,200 KAS</span></div>
+                            <div class="tx-item"><span>0x7d...a11 (Sent)</span><span style="color: var(--danger)">- 80 KAS</span></div>
+                            <div class="tx-item"><span>0x1c...e3b (Rec)</span><span class="tx-amount">+ 50,000 KAS</span></div>
+                            <div class="tx-item"><span>0x8f...2g4 (Sent)</span><span style="color: var(--danger)">- 15,000 KAS</span></div>
+                            <div class="tx-item"><span>0x7d...a11 (Sent)</span><span style="color: var(--danger)">- 80 KAS</span></div>
+                            <div class="tx-item"><span>0x2a...f9c (Rec)</span><span class="tx-amount">+ 1,200 KAS</span></div>
+                            <div class="tx-item"><span>0x7d...a11 (Sent)</span><span style="color: var(--danger)">- 80 KAS</span></div>
+                            <div class="tx-item"><span>0x1c...e3b (Rec)</span><span class="tx-amount">+ 50,000 KAS</span></div>
+                            <div class="tx-item"><span>0x8f...2g4 (Sent)</span><span style="color: var(--danger)">- 15,000 KAS</span></div>
+                            <div class="tx-item"><span>0x2a...f9c (Rec)</span><span class="tx-amount">+ 1,200 KAS</span></div>
+                            <div class="tx-item"><span>0x7d...a11 (Sent)</span><span style="color: var(--danger)">- 80 KAS</span></div>
+                            <div class="tx-item"><span>0x1c...e3b (Rec)</span><span class="tx-amount">+ 50,000 KAS</span></div>
+                            <div class="tx-item"><span>0x8f...2g4 (Sent)</span><span style="color: var(--danger)">- 15,000 KAS</span></div>
+                            <div class="tx-item"><span>0x2a...f9c (Rec)</span><span class="tx-amount">+ 1,200 KAS</span></div>
+                            <div class="tx-item"><span>0x7d...a11 (Sent)</span><span style="color: var(--danger)">- 80 KAS</span></div>
+                            <div class="tx-item"><span>0x1c...e3b (Rec)</span><span class="tx-amount">+ 50,000 KAS</span></div>
+                            <div class="tx-item"><span>0x8f...2g4 (Sent)</span><span style="color: var(--danger)">- 15,000 KAS</span></div>
+                            <div class="tx-item"><span>0x7d...a11 (Sent)</span><span style="color: var(--danger)">- 80 KAS</span></div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
