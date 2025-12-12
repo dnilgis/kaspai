@@ -28,6 +28,7 @@ jobs:
           python scripts/1_fetch_market_data.py
           python scripts/2_fetch_network_data.py
           python scripts/3_fetch_l2_data.py
+          python scripts/4_fetch_whale_data.py
 
       - name: Commit and Push changes
         uses: stefanzweifel/git-auto-commit-action@v5
