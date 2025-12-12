@@ -17,6 +17,7 @@
             <nav>
                 <a href="#l2">L2 Projects</a>
                 <a href="#stats">Network Stats</a>
+                <a href="#whales">Whale Watch</a>
                 <a href="#emissions">Emission Schedule</a>
             </nav>
         </div>
@@ -49,7 +50,7 @@
             </div>
         </section>
 
-        <section class="network-metrics-grid">
+        <section id="stats" class="network-metrics-grid">
             <div class="card metric-box">
                 <p class="metric-label">DAA Score</p>
                 <p id="daa-score" class="metric-value">--</p>
@@ -75,7 +76,7 @@
                 <p class="metric-label">Mined %</p>
                 <p id="mined-percent" class="metric-value">--</p>
             </div>
-            <div class="card metric-box">
+            <div class="card metric-box" id="emissions">
                 <p class="metric-label">Next Reduction</p>
                 <p id="next-reduction-days" class="metric-value">--</p>
                 <p class="stat-detail">days</p>
@@ -110,11 +111,32 @@
             </table>
         </section>
 
+        <section id="whales" class="card full-width">
+            <h2>🐳 Whale Watch (Top 50 Rich List)</h2>
+            <p style="color:#666; font-size: 0.9em; margin-bottom: 15px;">Tracking the largest wallets on the Kaspa network.</p>
+            
+            <div style="overflow-x: auto;">
+                <table id="whale-table" style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <tr style="background-color: #f9f9f9; text-align: left;">
+                            <th style="padding: 10px;">Rank</th>
+                            <th style="padding: 10px;">Address</th>
+                            <th style="padding: 10px;">Known Tag</th>
+                            <th style="padding: 10px;">Balance (KAS)</th>
+                            <th style="padding: 10px;">Explorer</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        </tbody>
+                </table>
+            </div>
+        </section>
+
     </main>
 
     <script>
         const formatNumber = (num, currency = true) => {
-            if (typeof num === 'string') return num; // Handle static strings like '526.09 PH/s'
+            if (typeof num === 'string') return num; 
             if (num >= 1000000000) return (num / 1000000000).toFixed(2) + ' B';
             if (num >= 1000000) return (num / 1000000).toFixed(2) + ' M';
             if (num >= 1000) return num.toLocaleString();
@@ -123,7 +145,6 @@
 
         const loadData = async (fileName) => {
             try {
-                // Append timestamp to ensure fresh data and bypass cache
                 const response = await fetch(`data/${fileName}?t=${new Date().getTime()}`);
                 if (!response.ok) throw new Error(`Failed to load ${fileName}`);
                 return response.json();
@@ -137,6 +158,7 @@
             const marketData = await loadData('market_data.json');
             const networkData = await loadData('network_data.json');
             const l2Data = await loadData('l2_data.json');
+            const whaleData = await loadData('whale_data.json');
 
             // --- Market Stats ---
             if (marketData.price_usd) {
@@ -168,7 +190,7 @@
                 document.getElementById('networks-split').textContent = l2Data.networks_split;
 
                 const tableBody = document.querySelector('#l2-projects-table tbody');
-                tableBody.innerHTML = ''; // Clear existing rows
+                tableBody.innerHTML = ''; 
                 l2Data.projects.forEach(p => {
                     const row = tableBody.insertRow();
                     row.insertCell().textContent = p.name;
@@ -193,43 +215,11 @@
                     actionCell.appendChild(link);
                 });
             }
-        };
 
-        const drawChart = () => {
-            // Placeholder data for visual representation until live price history API is integrated
-            new Chart(document.getElementById('priceChart'), {
-                type: 'line',
-                data: {
-                    labels: ['4D ago', '3D ago', '2D ago', '1D ago', 'Now'],
-                    datasets: [{
-                        label: 'Price Trend',
-                        data: [0.046, 0.048, 0.047, 0.050, 0.0476], 
-                        borderColor: '#00CCCC',
-                        backgroundColor: 'rgba(0, 204, 204, 0.1)',
-                        borderWidth: 2,
-                        tension: 0.4,
-                        pointRadius: 0,
-                        fill: true,
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        x: { display: false },
-                        y: { display: false }
-                    },
-                    plugins: { legend: { display: false }, tooltip: { enabled: false } }
-                }
-            });
-        };
-
-        window.onload = () => {
-            updateDashboard();
-            drawChart();
-            // Refresh data every 5 minutes (for better "real-time" feel between hourly GitHub commits)
-            setInterval(updateDashboard, 300000); 
-        };
-    </script>
-</body>
-</html>
+            // --- NEW: Whale Watch Logic ---
+            if (whaleData.whales) {
+                const whaleBody = document.querySelector('#whale-table tbody');
+                whaleBody.innerHTML = '';
+                
+                whaleData.whales.forEach(w => {
+                    const row = whaleBody.insert
