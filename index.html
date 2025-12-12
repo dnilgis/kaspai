@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KASLIVE OS v2.0 // PURPLE RAIN ENHANCED</title>
+    <title>KASLIVE OS v3.0 // DAG INSPECTOR</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -83,12 +83,16 @@
             margin: 0 auto;
             padding: 20px;
             display: grid;
-            grid-template-columns: 2.2fr 1.3fr; /* Wider Left, Narrower Right */
+            grid-template-columns: 2.2fr 1.3fr; 
             gap: var(--gap);
         }
 
-        .row-span-2 { grid-row: span 2; }
-        .row-span-3 { grid-row: span 3; }
+        /* Added a class for the DAG inspector to manage its height */
+        .dag-inspector {
+            height: 380px; /* Matched to chart height for clean row alignment */
+            display: flex;
+            flex-direction: column;
+        }
         
         /* --- HEADER --- */
         header {
@@ -164,7 +168,7 @@
         /* --- METRICS GRID (Top Right) --- */
         .metrics-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr); /* 3 Columns for denser data */
+            grid-template-columns: repeat(3, 1fr); 
             gap: 10px;
             text-align: center;
             padding-top: 5px;
@@ -203,12 +207,7 @@
         }
         .gauge-value { font-size: 0.8rem; font-weight:bold; }
         
-        /* --- DAG INSPECTOR (NEW PANEL) --- */
-        .dag-inspector {
-            height: 300px;
-            display: flex;
-            flex-direction: column;
-        }
+        /* --- DAG INSPECTOR SPECIFIC STYLES --- */
         .dag-status {
             display: flex;
             justify-content: space-around;
@@ -217,14 +216,28 @@
             border-bottom: 1px solid rgba(255,255,255,0.1);
             font-size: 0.8rem;
         }
-        .dag-status div span:first-child { color: var(--neon-cyan); }
-        .dag-viz {
+        .dag-status div { text-align: center; }
+        .dag-status div span:first-child { color: var(--text-muted); font-size: 0.7rem; display: block; }
+        .dag-status div span:last-child { color: var(--neon-purple); font-weight: bold; }
+        .dag-status .success-value { color: var(--success); }
+        .dag-status .low-danger { color: #f0c43c; }
+
+
+        .dag-viz-grid {
             flex-grow: 1;
+            display: grid;
+            grid-template-columns: 2fr 1fr; /* Tangle 2/3, Speed 1/3 */
+            gap: 15px;
+        }
+
+        .tangle-viz {
+            border: 1px dashed rgba(255,255,255,0.1);
+            padding: 10px;
             /* Placeholder for the complex DAG visualization */
             background: repeating-linear-gradient(
                 45deg,
-                rgba(0, 243, 255, 0.1),
-                rgba(0, 243, 255, 0.1) 1px,
+                rgba(0, 243, 255, 0.05),
+                rgba(0, 243, 255, 0.05) 1px,
                 transparent 1px,
                 transparent 10px
             );
@@ -232,25 +245,43 @@
             align-items: center;
             justify-content: center;
             color: var(--text-muted);
-            font-size: 1.2rem;
-            border: 1px dashed rgba(255,255,255,0.1);
+            font-size: 0.9rem;
+            flex-direction: column;
         }
+        .tangle-viz h4 { color: var(--neon-cyan); margin-bottom: 5px; }
+
+
+        .speed-analyzer {
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 10px;
+            background-color: rgba(0,0,0,0.2);
+        }
+        .speed-analyzer h4 { color: var(--neon-purple); margin-bottom: 10px; font-size: 0.8rem; text-transform: uppercase; }
+        .speed-data-point {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            padding: 5px 0;
+            border-bottom: 1px dashed rgba(255,255,255,0.05);
+        }
+        .speed-data-point span:last-child { color: var(--neon-cyan); }
+
 
         /* --- KRC TABLE --- */
         table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 0.8rem; /* Smaller font for more rows */
+            font-size: 0.8rem; 
         }
         th {
             text-align: left;
             color: var(--text-muted);
             font-weight: 400;
-            padding: 8px; /* Less padding */
+            padding: 8px; 
             border-bottom: 1px solid rgba(255,255,255,0.1);
         }
         td {
-            padding: 8px; /* Less padding */
+            padding: 8px; 
             border-bottom: 1px solid rgba(255,255,255,0.03);
         }
         tr:hover td {
@@ -275,7 +306,7 @@
 
         /* --- WALLET API & TX WATCH (NEW PANEL) --- */
         .wallet-panel {
-            height: 300px;
+            height: 380px; /* Matched to chart height for clean row alignment */
             display: flex;
             flex-direction: column;
             gap: 10px;
@@ -299,6 +330,7 @@
             box-shadow: 0 0 10px var(--neon-purple-glow);
             transition: 0.2s;
         }
+
         .tx-list {
             flex-grow: 1;
             overflow-y: auto;
@@ -316,12 +348,17 @@
         }
         .tx-amount { color: var(--success); }
         
-        /* --- WHALE SONAR --- */
+        /* --- WHALE SONAR (Compressed for 2nd row) --- */
+        .sonar-panel {
+            /* Adjusted height to fit next to DAG Inspector */
+            height: 250px; 
+            margin-bottom: var(--gap);
+        }
         .sonar-container {
             display: flex;
             align-items: flex-end;
             justify-content: center;
-            height: 120px; /* Reduced height to fit in the new layout */
+            height: 80px; 
             gap: 10px;
             padding-bottom: 10px;
         }
@@ -334,23 +371,15 @@
             animation: float 3s ease-in-out infinite;
         }
         .orb.rank-1 {
-            width: 60px; height: 60px;
+            width: 50px; height: 50px; /* Reduced size */
             background: radial-gradient(circle at 30% 30%, #f0cdff, var(--neon-purple));
-            box-shadow: 0 0 25px var(--neon-purple);
+            box-shadow: 0 0 20px var(--neon-purple);
             z-index: 2;
         }
-        .orb.rank-2 { width: 45px; height: 45px; opacity: 0.8; }
-        .orb.rank-3 { width: 35px; height: 35px; opacity: 0.6; }
-        /* Removed smaller orbs for space */
+        .orb.rank-2 { width: 35px; height: 35px; opacity: 0.8; }
+        .orb.rank-3 { width: 25px; height: 25px; opacity: 0.6; }
 
-        .orb span {
-            position: absolute;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            color: #000;
-            font-weight: bold;
-            font-size: 0.7rem;
-        }
+        .orb span { font-size: 0.6rem; }
 
         .whale-list {
             margin-top: 10px;
@@ -388,11 +417,11 @@
     <canvas id="rain-canvas"></canvas>
 
     <header>
-        <div class="logo">KASLIVE<span>_OS</span> v2.0</div>
+        <div class="logo">KASLIVE<span>_OS</span> v3.0</div>
         <nav>
             <a href="#">MARKET</a>
-            <a href="#">DAG</a>
-            <a href="#" class="active">KRC-20</a>
+            <a href="#" class="active">DAG</a>
+            <a href="#">KRC-20</a>
             <a href="#">SONAR</a>
         </nav>
         <div style="color: var(--neon-cyan); font-size: 0.9rem;">
@@ -417,15 +446,28 @@
         <div class="panel dag-inspector">
             <div class="panel-header">
                 <span class="panel-title">DAG BLOCK INSPECTOR // $1,000,000 IDEA</span>
-                <span style="font-size: 10px; color: var(--neon-purple)">Real-Time Confirmation Flow</span>
+                <span style="font-size: 10px; color: var(--neon-purple)">Tangle Flow & Speed Analysis</span>
             </div>
             <div class="dag-status">
-                <div>Tip Hash: <span>0x4f...c1d</span></div>
-                <div>Blocks/Sec: <span style="color: var(--success)">1.0 B/S</span></div>
-                <div>Avg Latency: <span>3.2 s</span></div>
+                <div><span>Tip Hash</span><span style="font-size: 0.9rem">0x4f...c1d</span></div>
+                <div><span>Orphan/Stale Rate</span><span class="low-danger">0.05%</span></div>
+                <div><span>In-Flight TXs</span><span class="success-value">1,452</span></div>
+                <div><span>Blocks/Sec (Target)</span><span class="success-value">1.0 B/S</span></div>
             </div>
-            <div class="dag-viz">
-                <p>Dynamic Visualization: DAG Blocks Flowing and Confirming <br>(Placeholder for D3.js or Canvas Rendering)</p>
+
+            <div class="dag-viz-grid">
+                <div class="tangle-viz">
+                    <h4>TANGLE VISUALIZER: Blocks Confirming in Parallel</h4>
+                    <p>Blocks are shown being created simultaneously (Green) and transition to a final, solid color (Purple) upon confirmation, illustrating GhostDAG's security.</p>
+                </div>
+
+                <div class="speed-analyzer">
+                    <h4>Speed & Latency Analyzer</h4>
+                    <div class="speed-data-point"><span>Avg Block Time</span><span>980 ms</span></div>
+                    <div class="speed-data-point"><span>Block Inclusion Latency</span><span>3.2 s</span></div>
+                    <div class="speed-data-point"><span>Network Latency (Avg)</span><span>150 ms</span></div>
+                    <div class="speed-data-point"><span>Max Block Jitter</span><span>120 ms</span></div>
+                </div>
             </div>
         </div>
 
@@ -485,13 +527,13 @@
                     <span class="metric-label">Block Count</span>
                 </div>
                 <div class="metric-box">
-                    <span class="metric-value danger">0.0%</span>
+                    <span class="metric-value danger">0.05%</span>
                     <span class="metric-label">Orphan Rate</span>
                 </div>
             </div>
         </div>
 
-        <div class="panel">
+        <div class="panel sonar-panel">
             <div class="panel-header">
                 <span class="panel-title">Whale Sonar (Top 5)</span>
             </div>
@@ -500,7 +542,7 @@
                 <div class="orb rank-1"><span>#1</span></div>
                 <div class="orb rank-2"><span>#2</span></div>
                 <div class="orb rank-3"><span>#3</span></div>
-                </div>
+            </div>
 
             <div class="whale-list">
                 <div class="whale-row">
@@ -515,10 +557,6 @@
                     <span>#3 Whale</span>
                     <span>210.00 M</span>
                 </div>
-                <div class="whale-row">
-                    <span>#4 Whale</span>
-                    <span>150.00 M</span>
-                </div>
             </div>
         </div>
 
@@ -529,24 +567,24 @@
             </div>
             
             <div class="wallet-connect">
-                <p>Connect your wallet to monitor balance & activity.</p>
+                <p>Monitor balance & activity.</p>
                 <button>Connect Kaspa Wallet</button>
             </div>
 
             <div class="tx-list">
-                <div class="tx-item"><span>0x2a...f9c</span><span class="tx-amount">+ 1,200 KAS</span></div>
-                <div class="tx-item"><span>0x7d...a11</span><span style="color: var(--danger)">- 80 KAS</span></div>
-                <div class="tx-item"><span>0x1c...e3b</span><span class="tx-amount">+ 50,000 KAS</span></div>
-                <div class="tx-item"><span>0x8f...2g4</span><span style="color: var(--danger)">- 15,000 KAS</span></div>
-                <div class="tx-item"><span>0x2a...f9c</span><span class="tx-amount">+ 1,200 KAS</span></div>
-                <div class="tx-item"><span>0x7d...a11</span><span style="color: var(--danger)">- 80 KAS</span></div>
-                <div class="tx-item"><span>0x1c...e3b</span><span class="tx-amount">+ 50,000 KAS</span></div>
-                <div class="tx-item"><span>0x8f...2g4</span><span style="color: var(--danger)">- 15,000 KAS</span></div>
-                <div class="tx-item"><span>0x2a...f9c</span><span class="tx-amount">+ 1,200 KAS</span></div>
-                <div class="tx-item"><span>0x7d...a11</span><span style="color: var(--danger)">- 80 KAS</span></div>
-                <div class="tx-item"><span>0x1c...e3b</span><span class="tx-amount">+ 50,000 KAS</span></div>
-                <div class="tx-item"><span>0x8f...2g4</span><span style="color: var(--danger)">- 15,000 KAS</span></div>
-                <div class="tx-item"><span>0x7d...a11</span><span style="color: var(--danger)">- 80 KAS</span></div>
+                <div class="tx-item"><span>0x2a...f9c (Rec)</span><span class="tx-amount">+ 1,200 KAS</span></div>
+                <div class="tx-item"><span>0x7d...a11 (Sent)</span><span style="color: var(--danger)">- 80 KAS</span></div>
+                <div class="tx-item"><span>0x1c...e3b (Rec)</span><span class="tx-amount">+ 50,000 KAS</span></div>
+                <div class="tx-item"><span>0x8f...2g4 (Sent)</span><span style="color: var(--danger)">- 15,000 KAS</span></div>
+                <div class="tx-item"><span>0x2a...f9c (Rec)</span><span class="tx-amount">+ 1,200 KAS</span></div>
+                <div class="tx-item"><span>0x7d...a11 (Sent)</span><span style="color: var(--danger)">- 80 KAS</span></div>
+                <div class="tx-item"><span>0x1c...e3b (Rec)</span><span class="tx-amount">+ 50,000 KAS</span></div>
+                <div class="tx-item"><span>0x8f...2g4 (Sent)</span><span style="color: var(--danger)">- 15,000 KAS</span></div>
+                <div class="tx-item"><span>0x2a...f9c (Rec)</span><span class="tx-amount">+ 1,200 KAS</span></div>
+                <div class="tx-item"><span>0x7d...a11 (Sent)</span><span style="color: var(--danger)">- 80 KAS</span></div>
+                <div class="tx-item"><span>0x1c...e3b (Rec)</span><span class="tx-amount">+ 50,000 KAS</span></div>
+                <div class="tx-item"><span>0x8f...2g4 (Sent)</span><span style="color: var(--danger)">- 15,000 KAS</span></div>
+                <div class="tx-item"><span>0x7d...a11 (Sent)</span><span style="color: var(--danger)">- 80 KAS</span></div>
             </div>
         </div>
     </div>
@@ -606,11 +644,10 @@
             {
                 const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
                 
-                // Color switch for "glitch" effect
                 if(Math.random() > 0.95) {
-                    ctx.fillStyle = '#00f3ff'; // Cyan
+                    ctx.fillStyle = '#00f3ff'; 
                 } else {
-                    ctx.fillStyle = '#bc13fe'; // Purple
+                    ctx.fillStyle = '#bc13fe'; 
                 }
 
                 ctx.fillText(text, i*fontSize, rainDrops[i]*fontSize);
