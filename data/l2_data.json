@@ -1,16 +1,16 @@
 {
-    "total_tvl": "7.8M",
-    "total_volume_24h": "806.0K",
+    "total_tvl": "7.7M",
+    "total_volume_24h": "820.9K",
     "total_projects": 18,
     "networks_split": "18 / 0 (Kasplex)",
     "projects": [
         {
             "name": "Nacho the Kat",
             "symbol": "NACHO",
-            "price": 1.45e-05,
-            "tvl": 4169743,
-            "volume_24h": 115910,
-            "change_24h": 6.13547,
+            "price": 1.419e-05,
+            "tvl": 4072455,
+            "volume_24h": 122331,
+            "change_24h": 3.60768,
             "category": "KRC-20",
             "network": "Kasplex",
             "visit": "https://www.coingecko.com/en/coins/nacho-the-kat"
@@ -19,9 +19,9 @@
             "name": "Kaspy",
             "symbol": "KASPY",
             "price": 2.62e-06,
-            "tvl": 866235,
-            "volume_24h": 22377,
-            "change_24h": 0.64604,
+            "tvl": 867821,
+            "volume_24h": 22476,
+            "change_24h": 0.24113,
             "category": "KRC-20",
             "network": "Kasplex",
             "visit": "https://www.coingecko.com/en/coins/kaspy"
@@ -29,10 +29,10 @@
         {
             "name": "ZEAL",
             "symbol": "ZEAL",
-            "price": 0.01174406,
-            "tvl": 600122,
-            "volume_24h": 54735,
-            "change_24h": 0.15502,
+            "price": 0.01174522,
+            "tvl": 600181,
+            "volume_24h": 54878,
+            "change_24h": -0.22342,
             "category": "KRC-20",
             "network": "Kasplex",
             "visit": "https://www.coingecko.com/en/coins/zeal"
@@ -40,10 +40,10 @@
         {
             "name": "Kasper",
             "symbol": "KASPER",
-            "price": 1.877e-05,
-            "tvl": 538714,
-            "volume_24h": 59559,
-            "change_24h": 0.42746,
+            "price": 1.848e-05,
+            "tvl": 530419,
+            "volume_24h": 58767,
+            "change_24h": -0.19439,
             "category": "KRC-20",
             "network": "Kasplex",
             "visit": "https://www.coingecko.com/en/coins/kasper"
@@ -51,10 +51,10 @@
         {
             "name": "KANGO",
             "symbol": "KANGO",
-            "price": 1.72e-06,
-            "tvl": 497159,
-            "volume_24h": 137260,
-            "change_24h": 0.8556,
+            "price": 1.78e-06,
+            "tvl": 511275,
+            "volume_24h": 142553,
+            "change_24h": 5.865,
             "category": "KRC-20",
             "network": "Kasplex",
             "visit": "https://www.coingecko.com/en/coins/kango"
@@ -62,10 +62,10 @@
         {
             "name": "PPKAS",
             "symbol": "PPKAS",
-            "price": 0.00031915,
-            "tvl": 308004,
-            "volume_24h": 55534,
-            "change_24h": -2.06105,
+            "price": 0.00032044,
+            "tvl": 308699,
+            "volume_24h": 55777,
+            "change_24h": -2.22389,
             "category": "KRC-20",
             "network": "Kasplex",
             "visit": "https://www.coingecko.com/en/coins/ppkas"
@@ -73,10 +73,10 @@
         {
             "name": "Konan of Kaspa",
             "symbol": "KONAN",
-            "price": 8.73483e-07,
-            "tvl": 253105,
-            "volume_24h": 59911,
-            "change_24h": 0.58598,
+            "price": 8.80797e-07,
+            "tvl": 248623,
+            "volume_24h": 59876,
+            "change_24h": 2.21074,
             "category": "KRC-20",
             "network": "Kasplex",
             "visit": "https://www.coingecko.com/en/coins/konan-of-kaspa"
@@ -84,10 +84,10 @@
         {
             "name": "Bitcoin the Turtle",
             "symbol": "SLOW",
-            "price": 0.00605116,
-            "tvl": 117387,
-            "volume_24h": 73071,
-            "change_24h": -6.01001,
+            "price": 0.00624949,
+            "tvl": 120383,
+            "volume_24h": 75191,
+            "change_24h": -2.356,
             "category": "KRC-20",
             "network": "Kasplex",
             "visit": "https://www.coingecko.com/en/coins/bitcoin-the-turtle"
@@ -95,10 +95,10 @@
         {
             "name": "Keke",
             "symbol": "KEKE",
-            "price": 1.49139e-07,
-            "tvl": 102906,
-            "volume_24h": 3732.88,
-            "change_24h": -2.66609,
+            "price": 1.52141e-07,
+            "tvl": 104978,
+            "volume_24h": 3779.24,
+            "change_24h": -0.7095,
             "category": "KRC-20",
             "network": "Kasplex",
             "visit": "https://www.coingecko.com/en/coins/keke"
@@ -106,10 +106,10 @@
         {
             "name": "GHOAD",
             "symbol": "GHOAD",
-            "price": 2.076e-05,
-            "tvl": 83046,
-            "volume_24h": 4341.16,
-            "change_24h": -1.88099,
+            "price": 2.078e-05,
+            "tvl": 83128,
+            "volume_24h": 4399.84,
+            "change_24h": 2.12026,
             "category": "KRC-20",
             "network": "Kasplex",
             "visit": "https://www.coingecko.com/en/coins/ghoad"
@@ -119,8 +119,8 @@
             "symbol": "BURT",
             "price": 7.229e-05,
             "tvl": 72291,
-            "volume_24h": 25140,
-            "change_24h": 3.45404,
+            "volume_24h": 24977,
+            "change_24h": 3.55867,
             "category": "KRC-20",
             "network": "Kasplex",
             "visit": "https://www.coingecko.com/en/coins/burt"
@@ -128,10 +128,10 @@
         {
             "name": "Kroak on Kaspa",
             "symbol": "KROAK",
-            "price": 9.259e-05,
-            "tvl": 62746,
-            "volume_24h": 27714,
-            "change_24h": 3.17995,
+            "price": 9.215e-05,
+            "tvl": 63931,
+            "volume_24h": 27998,
+            "change_24h": 2.8812,
             "category": "KRC-20",
             "network": "Kasplex",
             "visit": "https://www.coingecko.com/en/coins/kroak-on-kaspa"
@@ -139,10 +139,10 @@
         {
             "name": "Krex",
             "symbol": "KREX",
-            "price": 2.29e-06,
-            "tvl": 49403,
-            "volume_24h": 30628,
-            "change_24h": -16.54262,
+            "price": 2.33e-06,
+            "tvl": 49323,
+            "volume_24h": 30703,
+            "change_24h": 0.64536,
             "category": "KRC-20",
             "network": "Kasplex",
             "visit": "https://www.coingecko.com/en/coins/krex"
@@ -150,10 +150,10 @@
         {
             "name": "BOMO",
             "symbol": "BOMO",
-            "price": 5.4995e-08,
-            "tvl": 15393.84,
-            "volume_24h": 83298,
-            "change_24h": 1.89261,
+            "price": 5.4973e-08,
+            "tvl": 15118.49,
+            "volume_24h": 82652,
+            "change_24h": 1.83148,
             "category": "KRC-20",
             "network": "Kasplex",
             "visit": "https://www.coingecko.com/en/coins/bomo"
@@ -172,10 +172,10 @@
         {
             "name": "SZAR",
             "symbol": "SZAR",
-            "price": 6.5993e-08,
-            "tvl": 5981.61,
-            "volume_24h": 52718,
-            "change_24h": 0.06004,
+            "price": 6.7966e-08,
+            "tvl": 6071.39,
+            "volume_24h": 54523,
+            "change_24h": 3.00969,
             "category": "KRC-20",
             "network": "Kasplex",
             "visit": "https://www.coingecko.com/en/coins/szar"
